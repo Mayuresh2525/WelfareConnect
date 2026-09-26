@@ -1,0 +1,274 @@
+[
+  {
+    "id": 1,
+    "name": "National Scholarship Portal",
+    "category": "Education",
+    "audience": "Students",
+    "summary": "Government single-window platform for discovering, applying for and tracking eligible scholarships.",
+    "eligibility": "Eligibility is scholarship-specific and can depend on state, course, category, income and other criteria.",
+    "benefits": "Scholarship assistance according to the selected scholarship's rules.",
+    "documents": [
+      "Identity/registration details as required",
+      "Academic documents",
+      "Bank details",
+      "Scheme-specific documents"
+    ],
+    "steps": [
+      "Search the relevant scholarship",
+      "Check current eligibility and requirements",
+      "Complete registration/OTR if required",
+      "Apply and upload documents",
+      "Track application/payment status"
+    ],
+    "official": "https://scholarships.gov.in/",
+    "source": "National Scholarship Portal / National Government Services Portal",
+    "verified": "2026-09-19"
+  },
+  {
+    "id": 2,
+    "name": "MahaDBT Post-Matric Scholarships",
+    "category": "Education",
+    "audience": "Maharashtra Students",
+    "summary": "Maharashtra's Aaple Sarkar DBT portal provides access to multiple post-matric scholarship, freeship and education-benefit schemes.",
+    "eligibility": "Criteria vary by department and scheme; the portal provides an eligibility finder using fields such as qualification, address, income, department and disability.",
+    "benefits": "Tuition/examination fee support, maintenance allowance or other education benefits depending on the selected scheme.",
+    "documents": [
+      "Aadhaar/identity details",
+      "Income/caste/category documents where applicable",
+      "Previous marksheet",
+      "Bank details",
+      "Scheme-specific documents"
+    ],
+    "steps": [
+      "Use Find Eligible Schemes",
+      "Select the applicable scheme",
+      "Read the scheme's eligibility and documents",
+      "Register/login",
+      "Submit and track the application"
+    ],
+    "official": "https://mahadbt.maharashtra.gov.in/",
+    "source": "MahaDBT official portal",
+    "verified": "2026-09-19"
+  },
+  {
+    "id": 3,
+    "name": "Prime Minister's Employment Generation Programme (PMEGP)",
+    "category": "Business & Livelihood",
+    "audience": "Aspiring Entrepreneurs / Unemployed Youth",
+    "summary": "A credit-linked government programme that supports eligible individuals in setting up new micro-enterprises in the non-farm sector and promotes self-employment and employment generation.",
+    "eligibility": "For new enterprises, an individual above 18 years can apply. There is no income ceiling. For projects above ₹10 lakh in manufacturing or ₹5 lakh in business/service, the applicant must have at least an VIII-standard pass qualification. Only new eligible projects are covered.",
+    "benefits": "Financial assistance through bank-linked credit and margin-money subsidy for eligible new micro-enterprises, subject to the applicable PMEGP guidelines.",
+    "documents": [
+      "Aadhaar/identity details",
+      "Educational qualification certificate where applicable",
+      "Project report/business details",
+      "Bank details",
+      "Other documents required by the PMEGP application process"
+    ],
+    "steps": [
+      "Check PMEGP eligibility and project conditions",
+      "Prepare a business/project proposal",
+      "Apply through the official PMEGP portal",
+      "Complete verification and bank appraisal",
+      "Complete the required training/formalities",
+      "Track the application and loan/subsidy status"
+    ],
+    "official": "https://www.pmegp.msme.gov.in/",
+    "source": "Ministry of Micro, Small & Medium Enterprises / KVIC / PMEGP official portal",
+    "verified": "2026-09-19"
+  },
+  {
+    "id": 4,
+    "name": "Mahatma Gandhi National Rural Employment Guarantee Scheme (MGNREGA)",
+    "category": "Employment & Livelihood",
+    "audience": "Rural Households",
+    "summary": "A rural employment programme that provides a legal guarantee of wage employment to rural households whose adult members volunteer to perform unskilled manual work.",
+    "eligibility": "An Indian citizen who is 18 years or older and resides in a rural area can apply for work under MGNREGA. Employment is provided to rural households according to the scheme's demand-driven process and applicable rules.",
+    "benefits": "A legal guarantee of up to 100 days of wage employment per rural household in a financial year, along with rural asset creation and livelihood-supporting works.",
+    "documents": [
+      "Aadhaar/identity details as required",
+      "Household and address details",
+      "Job Card details",
+      "Bank or postal account details for wage payments where applicable"
+    ],
+    "steps": [
+      "Approach the local Gram Panchayat",
+      "Request registration for the household and obtain a Job Card",
+      "Submit a demand for work",
+      "Receive work allocation according to the programme process",
+      "Complete the assigned work",
+      "Check attendance, wages and payment status through the official system"
+    ],
+    "official": "https://nrega.nic.in/",
+    "source": "Ministry of Rural Development / Mahatma Gandhi NREGA official portal",
+    "verified": "2026-09-19"
+  },
+  {
+    "id": 5,
+    "name": "Deen Dayal Upadhyaya Grameen Kaushalya Yojana (DDU-GKY)",
+    "category": "Skills & Employment",
+    "audience": "Rural Youth from Poor Families",
+    "summary": "A Ministry of Rural Development skilling programme focused on rural youth from poor families, with training linked to employability and career opportunities.",
+    "eligibility": "The programme primarily targets rural youth from poor families between 15 and 35 years of age, subject to the current programme guidelines and state implementation rules.",
+    "benefits": "Skill training, certification and employment-oriented support designed to improve the income opportunities and career prospects of eligible rural youth.",
+    "documents": [
+      "Aadhaar/identity details",
+      "Age proof",
+      "Residence/address details",
+      "Educational information where required",
+      "Other documents requested by the authorised training provider"
+    ],
+    "steps": [
+      "Check DDU-GKY eligibility",
+      "Find an authorised DDU-GKY training opportunity",
+      "Select a suitable course/training programme",
+      "Complete registration and verification",
+      "Attend the required training",
+      "Complete assessment/certification and follow the programme's placement process"
+    ],
+    "official": "https://www.ddugky.info/",
+    "source": "Ministry of Rural Development / DDU-GKY official portal",
+    "verified": "2026-09-19"
+  },
+  {
+    "id": 6,
+    "name": "PM SVANidhi",
+    "category": "Business & Livelihood",
+    "audience": "Street Vendors",
+    "summary": "Digital guide to government support for eligible street vendors.",
+    "eligibility": "Eligibility is governed by current PM SVANidhi guidelines and vendor verification requirements.",
+    "benefits": "Working-capital credit and related support according to current scheme guidelines.",
+    "documents": [
+      "Vendor/identity documents",
+      "Bank details",
+      "Documents requested by the official process"
+    ],
+    "steps": [
+      "Check current eligibility",
+      "Prepare vendor/identity documents",
+      "Use the official PM SVANidhi portal or authorised channel",
+      "Submit the application",
+      "Track the application"
+    ],
+    "official": "https://pmsvanidhi.mohua.gov.in/",
+    "source": "MoHUA / PM SVANidhi official portal",
+    "verified": "2026-09-19"
+  },
+  {
+    "id": 7,
+    "name": "PM-KISAN Samman Nidhi",
+    "category": "Agriculture",
+    "audience": "Eligible Farmer Families",
+    "summary": "Income-support scheme for eligible landholding farmer families subject to scheme exclusions.",
+    "eligibility": "The official PM-KISAN guidelines define eligible landholding farmer families and exclusion categories; beneficiaries are identified by States/UTs.",
+    "benefits": "₹6,000 per year in three equal instalments, subject to current scheme rules.",
+    "documents": [
+      "Farmer/landholding details",
+      "Identity details",
+      "Bank account details",
+      "eKYC/other details required by the official process"
+    ],
+    "steps": [
+      "Check eligibility and exclusions",
+      "Complete farmer registration/status checks",
+      "Complete mandatory eKYC where required",
+      "Verify bank/beneficiary details",
+      "Track instalments/status"
+    ],
+    "official": "https://www.pmkisan.gov.in/",
+    "source": "Department of Agriculture & Farmers Welfare / PM-KISAN",
+    "verified": "2026-09-19"
+  },
+  {
+    "id": 8,
+    "name": "Pradhan Mantri Jan-Dhan Yojana",
+    "category": "Financial Inclusion",
+    "audience": "Unbanked / Eligible Citizens",
+    "summary": "Financial-inclusion programme providing access to basic banking and linked financial services.",
+    "eligibility": "A basic savings bank deposit account can be opened by a person who does not have another account, subject to the bank's current account-opening requirements.",
+    "benefits": "Basic savings account, no minimum balance requirement, RuPay debit card and access to linked financial services subject to applicable rules.",
+    "documents": [
+      "Officially accepted KYC/identity documents",
+      "Other bank account-opening information as required"
+    ],
+    "steps": [
+      "Visit a bank branch or authorised Bank Mitra",
+      "Provide required KYC information",
+      "Open the account",
+      "Ask about eligible linked services"
+    ],
+    "official": "https://pmjdy.gov.in/",
+    "source": "Department of Financial Services / PMJDY",
+    "verified": "2026-09-19"
+  },
+  {
+    "id": 9,
+    "name": "Pradhan Mantri Jeevan Jyoti Bima Yojana",
+    "category": "Social Security",
+    "audience": "Eligible Bank/Post Office Account Holders",
+    "summary": "Renewable one-year life-insurance scheme for eligible subscribers.",
+    "eligibility": "Official scheme information states eligibility for individuals aged 18–50 with a participating savings bank or post-office account, subject to current rules.",
+    "benefits": "Life cover of ₹2 lakh for death due to any reason, subject to current scheme terms.",
+    "documents": [
+      "Participating bank/post-office account",
+      "Enrolment/consent information",
+      "Nominee details as required"
+    ],
+    "steps": [
+      "Review current scheme terms",
+      "Approach participating bank/post office",
+      "Complete enrolment/consent",
+      "Keep nominee details updated"
+    ],
+    "official": "https://jansuraksha.gov.in/Forms-PMJJBY.aspx",
+    "source": "Department of Financial Services / Jan Suraksha — PMJJBY",
+    "verified": "2026-09-19"
+  },
+  {
+    "id": 10,
+    "name": "Pradhan Mantri Suraksha Bima Yojana",
+    "category": "Social Security",
+    "audience": "Eligible Bank/Post Office Account Holders",
+    "summary": "Renewable one-year personal-accident insurance scheme for eligible subscribers.",
+    "eligibility": "Official scheme information states eligibility for individuals aged 18–70 with a participating bank/post-office account, subject to current rules.",
+    "benefits": "Accidental death/total disability cover of ₹2 lakh and partial disability cover of ₹1 lakh, subject to scheme terms.",
+    "documents": [
+      "Participating bank/post-office account",
+      "Enrolment/consent information",
+      "Nominee details as required"
+    ],
+    "steps": [
+      "Review current scheme terms",
+      "Approach participating bank/post office",
+      "Complete enrolment/consent",
+      "Keep nominee details updated"
+    ],
+    "official": "https://jansuraksha.gov.in/Files/PMSBY/English/APPLICATIONFORM.pdf",
+    "source": "Department of Financial Services / Jan Suraksha — PMSBY official form",
+    "verified": "2026-09-19"
+  },
+  {
+    "id": 11,
+    "name": "Atal Pension Yojana",
+    "category": "Pension & Social Security",
+    "audience": "Eligible Citizens",
+    "summary": "Government-supported pension scheme for eligible subscribers with a savings bank/post-office account.",
+    "eligibility": "Open to citizens of India aged 18–40 with a savings bank/post-office account, subject to current rules; income-tax payers are excluded from joining under the current rule cited by the official scheme document.",
+    "benefits": "Guaranteed minimum pension options after age 60 according to the subscriber's chosen contribution/pension option and scheme rules.",
+    "documents": [
+      "Savings bank/post-office account",
+      "Identity/KYC information",
+      "Nominee/spouse details as required"
+    ],
+    "steps": [
+      "Check current eligibility",
+      "Approach participating bank/post office",
+      "Select pension option and contribution frequency",
+      "Complete enrolment/consent",
+      "Maintain contributions"
+    ],
+    "official": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
+    "source": "Pension Fund Regulatory and Development Authority (PFRDA) / APY",
+    "verified": "2026-09-19"
+  }
+]

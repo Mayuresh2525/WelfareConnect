@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welfare Connect — Digital Welfare Guide</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+</head>
+
+<body>
+
+<header class="nav">
+
+  <a class="brand" href="#home" style="display: inline-flex; align-items: center; gap: 8px;">
+    <svg width="24" height="16" viewBox="0 0 900 600" style="border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); vertical-align: middle;">
+      <rect width="900" height="600" fill="#138808"/>
+      <rect width="900" height="400" fill="#FFFFFF"/>
+      <rect width="900" height="200" fill="#FF9933"/>
+      <circle cx="450" cy="300" r="80" fill="none" stroke="#000080" stroke-width="12"/>
+      <circle cx="450" cy="300" r="16" fill="#000080"/>
+    </svg>
+    <span>Welfare Connect</span>
+  </a>
+
+  <button class="hamb" onclick="toggleNav()">☰</button>
+
+  <nav id="nav">
+    <a href="#home">Home</a>
+    <a href="#finder">Find Schemes</a>
+    <a href="#guides">How It Works</a>
+    <a href="#survey">Awareness</a>
+    <a href="#dashboard">Dashboard</a>
+  </nav>
+
+</header>
+
+
+<section id="home" class="hero">
+
+  <div class="hero-copy">
+
+    <p class="eyebrow">
+      B.SC. IT • COMMUNITY ENGAGEMENT PROJECT
+    </p>
+
+    <h1>
+      Government schemes,<br>
+      <span>made easier to discover.</span>
+    </h1>
+
+    <p class="lead">
+      Welfare Connect is an interactive digital guide that helps citizens
+      discover welfare schemes, understand basic eligibility, prepare
+      documents and reach official application channels.
+    </p>
+
+    <div class="actions">
+
+      <a class="btn primary" href="#finder">
+        Find a Scheme
+      </a>
+
+      <a class="btn secondary" href="#survey">
+        Take Awareness Survey
+      </a>
+
+    </div>
+
+    <div class="trust">
+      ✓ Search & filter &nbsp;
+      ✓ Eligibility guidance &nbsp;
+      ✓ Document checklist &nbsp;
+      ✓ Official links
+    </div>
+
+  </div>
+
+
+  <div class="hero-visual">
+
+    <div class="orb">
+      <svg width="84" height="56" viewBox="0 0 900 600" style="border-radius: 6px; box-shadow: 0 4px 14px rgba(0,0,0,0.18);">
+        <rect width="900" height="600" fill="#138808"/>
+        <rect width="900" height="400" fill="#FFFFFF"/>
+        <rect width="900" height="200" fill="#FF9933"/>
+        <circle cx="450" cy="300" r="80" fill="none" stroke="#000080" stroke-width="12"/>
+        <circle cx="450" cy="300" r="16" fill="#000080"/>
+      </svg>
+    </div>
+
+    <div class="mini-card">
+      <b>Discover</b>
+      <span>Search schemes</span>
+    </div>
+
+    <div class="mini-card">
+      <b>Prepare</b>
+      <span>Check documents</span>
+    </div>
+
+    <div class="mini-card">
+      <b>Apply</b>
+      <span>Open official portal</span>
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="section intro">
+
+  <div class="intro-card">
+
+    <div class="big-icon">
+      🔎
+    </div>
+
+    <div>
+
+      <p class="eyebrow">
+        THE PROBLEM
+      </p>
+
+      <h2>
+        Information exists — finding the right information can be difficult.
+      </h2>
+
+      <p>
+        Welfare Connect organises scheme information into a simple discovery
+        and guidance experience. It is an educational project and does not
+        replace official government portals.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section id="finder" class="section">
+
+  <div class="head">
+
+    <p class="eyebrow">
+      SMART SCHEME FINDER
+    </p>
+
+    <h2>
+      Find schemes that match your needs
+    </h2>
+
+    <p>
+      Search by keyword, category or target group.
+    </p>
+
+  </div>
+
+
+  <div class="profile box">
+
+    <div class="profile-title">
+
+      <span>🎯</span>
+
+      <div>
+        <b>Quick profile</b>
+        <small>Optional filters to narrow the results</small>
+      </div>
+
+    </div>
+
+
+    <div class="profile-grid">
+
+      <label>
+        Category
+
+        <select id="category" onchange="loadSchemes()">
+          <option>All</option>
+          <option>Education</option>
+          <option>Healthcare</option>
+          <option>Housing</option>
+          <option>Skills & Employment</option>
+          <option>Business & Livelihood</option>
+          <option>Digital Services</option>
+        </select>
+
+      </label>
+
+
+      <label>
+        Audience
+
+        <select id="audience" onchange="loadSchemes()">
+          <option>All</option>
+          <option>Students</option>
+          <option>Youth</option>
+          <option>Eligible Families</option>
+          <option>Eligible Households</option>
+          <option>Street Vendors</option>
+          <option>Citizens</option>
+        </select>
+
+      </label>
+
+
+      <label class="search-label">
+        Keyword
+
+        <input
+          id="search"
+          placeholder="e.g. student, housing, health"
+          oninput="loadSchemes()"
+        >
+
+      </label>
+
+    </div>
+
+  </div>
+
+
+  <div id="results" class="grid"></div>
+
+</section>
+
+
+<section id="guides" class="section alt">
+
+  <div class="head">
+
+    <p class="eyebrow">
+      DIGITAL GUIDE
+    </p>
+
+    <h2>
+      From discovery to application
+    </h2>
+
+    <p>
+      A simple four-step journey.
+    </p>
+
+  </div>
+
+
+  <div class="steps">
+
+    <div class="step">
+
+      <span>01</span>
+
+      <div class="step-icon">
+        🔎
+      </div>
+
+      <h3>
+        Find
+      </h3>
+
+      <p>
+        Search and filter schemes based on your needs.
+      </p>
+
+    </div>
+
+
+    <div class="step">
+
+      <span>02</span>
+
+      <div class="step-icon">
+        🎯
+      </div>
+
+      <h3>
+        Understand
+      </h3>
+
+      <p>
+        Read basic eligibility, benefits and important notes.
+      </p>
+
+    </div>
+
+
+    <div class="step">
+
+      <span>03</span>
+
+      <div class="step-icon">
+        📋
+      </div>
+
+      <h3>
+        Prepare
+      </h3>
+
+      <p>
+        Review documents and follow the application checklist.
+      </p>
+
+    </div>
+
+
+    <div class="step">
+
+      <span>04</span>
+
+      <div class="step-icon">
+        ↗️
+      </div>
+
+      <h3>
+        Apply
+      </h3>
+
+      <p>
+        Continue to the official portal for the actual application.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="section">
+
+  <div class="head">
+
+    <p class="eyebrow">
+      LEARNING ZONE
+    </p>
+
+    <h2>
+      Welfare awareness quiz
+    </h2>
+
+    <p>
+      Test your understanding in five quick questions.
+    </p>
+
+  </div>
+
+
+  <div class="quiz box">
+
+    <div id="quiz"></div>
+
+    <button
+      id="quizNext"
+      class="btn primary"
+      onclick="nextQuiz()"
+    >
+      Next
+    </button>
+
+    <div id="quizResult"></div>
+
+  </div>
+
+</section>
+
+
+<section id="survey" class="section alt">
+
+  <div class="head">
+
+    <p class="eyebrow">
+      CEP FIELD ACTIVITY
+    </p>
+
+    <h2>
+      Awareness Survey
+    </h2>
+
+    <p>
+      Complete this short assessment to evaluate welfare scheme awareness.
+    </p>
+
+  </div>
+
+
+  <div class="survey box">
+
+    <p class="survey-note">
+      Your responses will be recorded for academic/CEP analysis.
+      The information collected will be used only for this project.
+    </p>
+
+    <div id="surveyQs"></div>
+
+    <button
+      class="btn primary"
+      onclick="submitSurvey()"
+    >
+      Submit Response
+    </button>
+
+    <div id="surveyMsg"></div>
+
+  </div>
+
+</section>
+
+
+<section id="dashboard" class="section">
+
+  <div class="head">
+    <p class="eyebrow">PROJECT ANALYTICS</p>
+    <h2>Welfare Awareness — Survey Insights</h2>
+    <p>Anonymous aggregate results from the Welfare Connect awareness survey.</p>
+  </div>
+
+  <div class="dashboard-summary">
+    <div class="dashboard-stat">
+      <span>👥 Total Responses</span>
+      <strong id="dashResponses">0</strong>
+      <small>Completed survey responses</small>
+    </div>
+    <div class="dashboard-stat">
+      <span>📊 Overall Score</span>
+      <strong id="dashAverage">0%</strong>
+      <small>Average across all 10 questions</small>
+    </div>
+    <div class="dashboard-stat">
+      <span>🎯 Awareness & Knowledge</span>
+      <strong id="dashAwareness">0%</strong>
+      <small>Eligibility and official portal confidence</small>
+    </div>
+    <div class="dashboard-stat">
+      <span>💡 Platform Usefulness</span>
+      <strong id="dashPlatform">0%</strong>
+      <small>Importance, experience and future use</small>
+    </div>
+  </div>
+
+  <div class="dashboard-grid dashboard-grid-main">
+    <div class="dashboard-panel dashboard-question-panel">
+      <div class="dashboard-panel-head">
+        <div>
+          <p class="eyebrow">QUESTION-WISE RESULTS</p>
+          <h3>How respondents rated each area</h3>
+        </div>
+        <span class="dashboard-badge">10 questions</span>
+      </div>
+      <div id="questionBars" class="question-bars"></div>
+    </div>
+
+    <div class="dashboard-panel distribution-panel">
+      <div class="dashboard-panel-head">
+        <div>
+          <p class="eyebrow">RESPONSE MIX</p>
+          <h3>Rating distribution</h3>
+        </div>
+      </div>
+      <div class="donut-wrap">
+        <div id="ratingDonut" class="rating-donut">
+          <div class="donut-hole">
+            <strong id="ratingTotal">0</strong>
+            <span>ratings</span>
+          </div>
+        </div>
+        <div id="ratingLegend" class="rating-legend"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-panel dashboard-trend-panel">
+    <div class="dashboard-panel-head">
+      <div>
+        <p class="eyebrow">SURVEY ACTIVITY</p>
+        <h3>Responses over the last 7 days</h3>
+      </div>
+      <span class="dashboard-badge">Daily responses</span>
+    </div>
+    <div class="line-chart-wrap">
+      <svg id="responseLineChart" class="response-line-chart" viewBox="0 0 760 280" role="img" aria-label="Survey responses over the last 7 days"></svg>
+    </div>
+  </div>
+
+  <div class="dashboard-grid dashboard-category-grid">
+    <div class="dashboard-panel category-panel">
+      <p class="eyebrow">SURVEY AREAS</p>
+      <h3>What the questions cover</h3>
+      <div class="category-list">
+        <div class="category-item">
+          <div><strong>Awareness & Knowledge</strong><span>Eligibility and official portal identification</span></div>
+          <b id="catAwareness">0%</b>
+        </div>
+        <div class="category-item">
+          <div><strong>Access & Preparation</strong><span>Documents, application confidence and barriers</span></div>
+          <b id="catPreparation">0%</b>
+        </div>
+        <div class="category-item">
+          <div><strong>Platform Experience</strong><span>Importance, navigation, usefulness and future use</span></div>
+          <b id="catPlatform">0%</b>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-panel insight-panel">
+      <p class="eyebrow">KEY INSIGHT</p>
+      <h3 id="dashboardInsightTitle">Waiting for survey data</h3>
+      <p id="dashboardInsightText">Once responses are available, this section highlights the comparatively stronger and weaker survey areas.</p>
+      <div class="insight-chip" id="dashboardInsightChip">Based on aggregate responses</div>
+    </div>
+  </div>
+
+  <div class="dashboard-note">
+    Results are shown as anonymous aggregate statistics. The dashboard does not display individual participant details.
+  </div>
+
+</section>
+
+
+<footer>
+
+  <div>
+
+    <b>
+      Welfare Connect
+    </b>
+
+    <p>
+      Creating Digital Guides for Public Welfare Schemes
+    </p>
+
+  </div>
+
+
+  <div>
+
+    <small>
+      Educational CEP prototype • Verify current scheme information
+      on official government portals.
+    </small>
+
+  </div>
+
+</footer>
+
+
+<div
+  id="modal"
+  class="modal hidden"
+  onclick="closeModal(event)"
+>
+
+  <div
+    class="modal-card"
+    onclick="event.stopPropagation()"
+  >
+
+    <button
+      class="close"
+      onclick="closeModal()"
+    >
+      ×
+    </button>
+
+    <div id="modalBody"></div>
+
+  </div>
+
+</div>
+
+
+<script src="{{ url_for('static', filename='script.js') }}?v=2"></script>
+
+</body>
+</html>
