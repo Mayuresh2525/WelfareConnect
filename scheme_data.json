@@ -204,7 +204,7 @@
   {
     "id": 9,
     "name": "Pradhan Mantri Jeevan Jyoti Bima Yojana",
-    "category": "Social Security",
+    "category": "Pension & Social Security",
     "audience": "Eligible Bank/Post Office Account Holders",
     "summary": "Renewable one-year life-insurance scheme for eligible subscribers.",
     "eligibility": "Official scheme information states eligibility for individuals aged 18–50 with a participating savings bank or post-office account, subject to current rules.",
@@ -227,7 +227,7 @@
   {
     "id": 10,
     "name": "Pradhan Mantri Suraksha Bima Yojana",
-    "category": "Social Security",
+    "category": "Pension & Social Security",
     "audience": "Eligible Bank/Post Office Account Holders",
     "summary": "Renewable one-year personal-accident insurance scheme for eligible subscribers.",
     "eligibility": "Official scheme information states eligibility for individuals aged 18–70 with a participating bank/post-office account, subject to current rules.",
@@ -270,5 +270,33 @@
     "official": "https://pfrda.org.in/web/pfrda/schemes/atal-pension-yojana-apy",
     "source": "Pension Fund Regulatory and Development Authority (PFRDA) / APY",
     "verified": "2026-09-19"
+  },
+  {
+    "id": 12,
+    "name": "Shravanbal Seva Rajya Nivruttivetan Yojana",
+    "category": "Pension & Social Security",
+    "audience": "Eligible Senior Citizens",
+    "summary": "A Maharashtra Government pension scheme that provides monthly financial assistance to eligible elderly persons.",
+    "eligibility": "Eligible elderly individuals aged 65 years and above whose names are on the Below Poverty Line (BPL) list or whose annual income is less than ₹21,000, subject to applicable government rules and verification.",
+    "benefits": "₹1,500 per month in financial assistance to each eligible beneficiary.",
+    "documents": [
+      "Aadhaar/identity proof",
+      "Age proof",
+      "Address/residence proof",
+      "Income certificate or BPL details where applicable",
+      "Bank account details",
+      "Other documents required during verification"
+    ],
+    "steps": [
+      "Check the current eligibility criteria",
+      "Visit the official Maharashtra Special Assistance portal for scheme information",
+      "Check the required application process",
+      "Apply through the prescribed Collector's Office, Tehsildar's Office, Sanjay Gandhi Niradhar Anudan Yojana Branch or Talathi Office",
+      "Complete verification as required",
+      "Track the benefit/status through the applicable official system"
+    ],
+    "official": "https://sas.mahait.org/",
+    "source": "Government of Maharashtra / Social Justice & Special Assistance Department",
+    "verified": "2026-09-26"
   }
 ]
