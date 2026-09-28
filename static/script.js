@@ -104,25 +104,25 @@ const quizzes = [
 
 const surveyQs = [
 
-    "How familiar are you with the eligibility criteria required for major government welfare schemes?",
+    "How familiar are you with central and state government welfare schemes?",
 
-    "How confident are you in identifying the exact official government portal versus unofficial intermediary websites?",
+    "In general, how easy or difficult is it to find clear information about government schemes?",
 
-    "How easy is it for you to find an accurate checklist of required documents before beginning a scheme application?",
+    "How confident are you in understanding eligibility rules and requirements for welfare schemes?",
 
-    "How confident are you in completing a scheme application process without needing paid agents or intermediaries?",
+    "How confident are you in knowing what documents are typically needed when applying for a scheme?",
 
-    "How frequently do you feel lack of clear information or complex procedures prevents eligible citizens from availing benefits?",
+    "How clear are you about where to start when applying for a government scheme?",
 
-    "How important is it to have eligibility rules, benefits, and checklists consolidated into a single guidance platform?",
+    "How confident are you in identifying the genuine, official government portal for a scheme?",
 
-    "How helpful did you find Welfare Connect’s interactive features (search, audience filters, and document checklist)?",
+    "How helpful was the Welfare Connect platform in discovering schemes relevant to your profile?",
 
-    "How easy and clear was it to navigate the website and find scheme details?",
+    "How useful did you find the interactive document checklist and step-by-step application guide?",
 
-    "How useful did you find the step-by-step application instructions and direct official portal links?",
+    "How easy was it to navigate and use the Welfare Connect website?",
 
-    "How likely are you to use Welfare Connect as a starting point to prepare documents and find official portals in the future?"
+    "How likely are you to use Welfare Connect in the future or recommend it to others seeking scheme information?"
 
 ];
 
@@ -134,19 +134,11 @@ const surveyQs = [
 const surveyOptions = [
 
     [
-        "Not at all familiar",
+        "Not familiar at all",
         "Slightly familiar",
         "Moderately familiar",
         "Very familiar",
         "Extremely familiar"
-    ],
-
-    [
-        "Not at all confident",
-        "Slightly confident",
-        "Moderately confident",
-        "Very confident",
-        "Extremely confident"
     ],
 
     [
@@ -158,7 +150,7 @@ const surveyOptions = [
     ],
 
     [
-        "Not at all confident",
+        "Not confident at all",
         "Slightly confident",
         "Moderately confident",
         "Very confident",
@@ -166,19 +158,27 @@ const surveyOptions = [
     ],
 
     [
-        "Never",
-        "Rarely",
-        "Sometimes",
-        "Often",
-        "Always"
+        "Not confident at all",
+        "Slightly confident",
+        "Moderately confident",
+        "Very confident",
+        "Extremely confident"
     ],
 
     [
-        "Not at all important",
-        "Slightly important",
-        "Moderately important",
-        "Very important",
-        "Extremely important"
+        "Not clear at all",
+        "Slightly clear",
+        "Moderately clear",
+        "Very clear",
+        "Extremely clear"
+    ],
+
+    [
+        "Not confident at all",
+        "Slightly confident",
+        "Moderately confident",
+        "Very confident",
+        "Extremely confident"
     ],
 
     [
@@ -190,19 +190,19 @@ const surveyOptions = [
     ],
 
     [
-        "Very difficult",
-        "Difficult",
-        "Neutral",
-        "Easy",
-        "Very easy"
-    ],
-
-    [
         "Not useful at all",
         "Slightly useful",
         "Moderately useful",
         "Very useful",
         "Extremely useful"
+    ],
+
+    [
+        "Very difficult",
+        "Difficult",
+        "Neutral",
+        "Easy",
+        "Very easy"
     ],
 
     [
@@ -1584,10 +1584,111 @@ async function submitSurvey() {
 
 
     // --------------------------------------------------------
-    // SEND RESPONSE TO FLASK
+    // PREVENT DOUBLE SUBMISSION
+    // --------------------------------------------------------
+
+    const submitButton =
+        document.querySelector(
+            '#survey button[onclick="submitSurvey()"]'
+        );
+
+
+    if (submitButton) {
+
+        submitButton.disabled = true;
+
+        submitButton.dataset.originalText =
+            submitButton.textContent;
+
+        submitButton.textContent =
+            "Submitting...";
+
+    }
+
+
+    message.innerHTML = `
+
+        <div class="msg">
+
+            Submitting your response...
+
+        </div>
+
+    `;
+
+
+    // --------------------------------------------------------
+    // DATA FOR GOOGLE FORM
+    // --------------------------------------------------------
+
+    // Google Form uses 18-25 with a normal hyphen.
+    // Welfare Connect currently uses 18–25 with an en dash.
+
+    const googleAgeGroup =
+        ageGroup.replace(
+            "18–25",
+            "18-25"
+        );
+
+
+    const googleFormData = {
+
+    name: name,
+
+    status:
+        status.replace(
+            "Self-Employed / Business",
+            "Self -Employed/Business"
+        ),
+
+    gender: gender,
+
+    age_group:
+        ageGroup.replace(
+            "18–25",
+            "18-25"
+        ),
+
+    q1: surveyOptions[0][answers[0] - 1],
+
+    q2: surveyOptions[1][answers[1] - 1],
+
+    q3: surveyOptions[2][answers[2] - 1],
+
+    q4: surveyOptions[3][answers[3] - 1],
+
+    q5: surveyOptions[4][answers[4] - 1],
+
+    q6: surveyOptions[5][answers[5] - 1],
+
+    q7: surveyOptions[6][answers[6] - 1],
+
+    q8: surveyOptions[7][answers[7] - 1],
+
+    q9: surveyOptions[8][answers[8] - 1],
+
+    q10: surveyOptions[9][answers[9] - 1]
+
+};
+
+
+    // --------------------------------------------------------
+    // GOOGLE APPS SCRIPT URL
+    // --------------------------------------------------------
+
+    const GOOGLE_FORM_CONNECTOR =
+        "https://script.google.com/macros/s/AKfycbxCXtLgERuKD9Vyfzv5nWi4wgpFZllqWzJcfU8MFstuN8q86-d-zljrAQRCQXxGvC98Ug/exec";
+
+
+    // --------------------------------------------------------
+    // SUBMIT TO BOTH SYSTEMS
     // --------------------------------------------------------
 
     try {
+
+        // ----------------------------------------------------
+        // 1. SAVE TO WELFARE CONNECT / SQLITE
+        // ----------------------------------------------------
 
         const response =
             await fetch(
@@ -1634,57 +1735,104 @@ async function submitSurvey() {
             await response.json();
 
 
-        if (result.ok) {
+        if (!result.ok) {
 
-            message.innerHTML = `
-
-                <div class="msg">
-
-                    <b>
-                        Response saved successfully.
-                    </b>
-
-                    <br>
-
-                    Awareness score:
-                    ${score}/100
-
-                </div>
-
-            `;
-
-
-            updateStats();
-
-
-            trackActivity(
-                "survey_submitted",
-                {
-                    stage: stage,
-                    score: score
-                }
+            throw new Error(
+                result.error ||
+                "Could not save response."
             );
 
-
-            resetSurvey();
-
-
-        } else {
-
-            message.innerHTML = `
-
-                <div class="msg">
-
-                    ${
-                        result.error ||
-                        "Could not save response."
-                    }
-
-                </div>
-
-            `;
-
         }
+
+
+        // ----------------------------------------------------
+        // 2. SEND TO GOOGLE FORM
+        // ----------------------------------------------------
+
+        const googleBody =
+            new URLSearchParams();
+
+
+        Object.entries(
+            googleFormData
+        ).forEach(
+            ([key, value]) => {
+
+                googleBody.append(
+                    key,
+                    value
+                );
+
+            }
+        );
+
+
+        // We intentionally use no-cors because
+        // Google Apps Script does not expose normal
+        // CORS response headers to the browser.
+
+        await fetch(
+            GOOGLE_FORM_CONNECTOR,
+            {
+
+                method:
+                    "POST",
+
+                mode:
+                    "no-cors",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/x-www-form-urlencoded;charset=UTF-8"
+
+                },
+
+                body:
+                    googleBody.toString()
+
+            }
+        );
+
+
+        // ----------------------------------------------------
+        // BOTH SUBMISSIONS INITIATED
+        // ----------------------------------------------------
+
+        message.innerHTML = `
+
+            <div class="msg">
+
+                <b>
+                    Response submitted successfully.
+                </b>
+
+                <br>
+
+                Awareness score:
+                ${score}/100
+
+            </div>
+
+        `;
+
+
+        updateStats();
+
+
+        trackActivity(
+            "survey_submitted",
+            {
+                stage:
+                    stage,
+
+                score:
+                    score
+            }
+        );
+
+
+        resetSurvey();
 
 
     } catch (error) {
@@ -1699,16 +1847,39 @@ async function submitSurvey() {
 
             <div class="msg">
 
-                Could not connect to the server.
+                ${
+                    error.message ||
+                    "Could not submit the response."
+                }
+
+                <br>
+
                 Please try again.
 
             </div>
 
         `;
 
+    } finally {
+
+        if (submitButton) {
+
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+                submitButton.dataset.originalText ||
+                "Submit";
+
+        }
+
     }
 
 }
+
+
+    
+
+
 
 
 // ============================================================
