@@ -12,6 +12,7 @@
 <body>
 
 <header class="nav">
+  
 
   <a class="brand" href="#home" style="display: inline-flex; align-items: center; gap: 8px;">
     <svg width="24" height="16" viewBox="0 0 900 600" style="border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); vertical-align: middle;">
@@ -141,7 +142,7 @@
 </section>
 
 
-<section id="finder" class="section">
+<section id="finder" class="section reveal">
 
   <div class="head">
 
@@ -210,17 +211,40 @@
       <label class="search-label">
         Keyword
 
-        <input
-          id="search"
-          placeholder="e.g. student, pension, employment"
-          oninput="loadSchemes()"
-        >
+        <div class="search-wrapper">
+
+  <input
+    id="search"
+    placeholder="e.g. student, pension, employment"
+    oninput="showSearchSuggestions()"
+  >
+
+  <div id="searchSuggestions"></div>
+
+</div>
 
       </label>
 
     </div>
 
   </div>
+  <div class="guided-search">
+  <button class="btn secondary" onclick="openSchemeWizard()">
+    🤔 Not sure what you need?
+  </button>
+</div>
+
+<div id="schemeWizard" class="wizard hidden">
+
+  <div class="wizard-card">
+
+    <button class="wizard-close" onclick="closeSchemeWizard()">×</button>
+
+    <div id="wizardContent"></div>
+
+  </div>
+
+</div>
 
 
   <div id="results" class="grid"></div>
@@ -228,7 +252,7 @@
 </section>
 
 
-<section id="guides" class="section alt">
+<section id="guides" class="section alt reveal">
 
   <div class="head">
 
@@ -367,7 +391,7 @@
 </section>
 
 
-<section id="survey" class="section alt">
+<section id="survey" class="section alt reveal">
 
   <div class="head">
 
@@ -410,7 +434,7 @@
 </section>
 
 
-<section id="dashboard" class="section">
+<section id="dashboard" class="section reveal">
 
   <div class="head">
     <p class="eyebrow">PROJECT ANALYTICS</p>

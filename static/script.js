@@ -544,12 +544,7 @@ async function loadSchemes() {
     View Full Guide →
   </button>
 
-  <button
-    class="save-btn"
-    onclick="toggleSaveScheme(${s.id}, this)"
-  >
-    ♡ Save
-  </button>
+  
 
 </div>
 
@@ -2063,36 +2058,7 @@ function selectWizard(audience) {
 // SAVED SCHEMES
 // ============================================================
 
-function getSavedSchemes() {
-  return JSON.parse(
-    localStorage.getItem("savedSchemes") || "[]"
-  );
-}
 
-function toggleSaveScheme(id, button) {
-
-  let saved = getSavedSchemes();
-
-  if (saved.includes(Number(id))) {
-
-    saved = saved.filter(
-      schemeId => schemeId !== Number(id)
-    );
-
-    button.textContent = "♡ Save";
-
-  } else {
-
-    saved.push(Number(id));
-
-    button.textContent = "♥ Saved";
-  }
-
-  localStorage.setItem(
-    "savedSchemes",
-    JSON.stringify(saved)
-  );
-}
 
 function updateChecklist(total) {
 
