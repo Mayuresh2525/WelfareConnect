@@ -537,14 +537,21 @@ async function loadSchemes() {
 
                     <div class="card-actions">
 
-                        <button
-                            class="link-btn"
-                            onclick="openScheme(${s.id})"
-                        >
-                            View Full Guide →
-                        </button>
+  <button
+    class="link-btn"
+    onclick="openScheme(${s.id})"
+  >
+    View Full Guide →
+  </button>
 
-                    </div>
+  <button
+    class="save-btn"
+    onclick="toggleSaveScheme(${s.id}, this)"
+  >
+    ♡ Save
+  </button>
+
+</div>
 
                 </article>
 
@@ -635,6 +642,35 @@ async function openScheme(id) {
             <p>
                 ${s.summary}
             </p>
+            <div class="application-progress">
+
+  <div class="progress-step active">
+    <span>1</span>
+    Find
+  </div>
+
+  <div class="progress-line"></div>
+
+  <div class="progress-step active">
+    <span>2</span>
+    Understand
+  </div>
+
+  <div class="progress-line"></div>
+
+  <div class="progress-step">
+    <span>3</span>
+    Prepare
+  </div>
+
+  <div class="progress-line"></div>
+
+  <div class="progress-step">
+    <span>4</span>
+    Apply
+  </div>
+
+</div>
 
 
             <h3>
@@ -662,29 +698,46 @@ async function openScheme(id) {
             </h3>
 
 
-            <ul class="checklist">
+            <div class="checklist-progress">
 
-                ${s.documents.map(
-                    (document, index) => `
+  <div class="checklist-header">
+    <strong>Document checklist</strong>
+    <span id="checklistCount">0 / ${s.documents.length}</span>
+  </div>
 
-                        <li>
+  <div class="progress-bar">
+    <div
+      id="checklistProgress"
+      class="progress-fill"
+    ></div>
+  </div>
 
-                            <label>
+</div>
 
-                                <input
-                                    type="checkbox"
-                                >
+<ul class="checklist">
 
-                                ${document}
+  ${s.documents.map(
+    (document, index) => `
 
-                            </label>
+      <li>
 
-                        </li>
+        <label>
 
-                    `
-                ).join("")}
+          <input
+            type="checkbox"
+            onchange="updateChecklist(${s.documents.length})"
+          >
 
-            </ul>
+          <span>${document}</span>
+
+        </label>
+
+      </li>
+
+    `
+  ).join("")}
+
+</ul>
 
 
             <h3>
@@ -709,17 +762,31 @@ async function openScheme(id) {
 
             <div class="official">
 
-                <a
-                    class="btn primary"
-                    href="${s.official}"
-                    target="_blank"
-                    rel="noopener"
-                    onclick="trackActivity('official_link_click', {scheme_id: ${Number(s.id)}})"
-                >
-                    Open Official Portal ↗
-                </a>
+    <a
+        class="btn primary"
+        href="${s.official}"
+        target="_blank"
+        rel="noopener"
+        onclick="trackActivity('official_link_click', {scheme_id: ${Number(s.id)}})"
+    >
+        Open Official Portal ↗
+    </a>
 
-            </div>
+    <button
+        class="btn secondary"
+        onclick="shareScheme()"
+    >
+        ↗ Share
+    </button>
+
+    <button
+        class="btn secondary"
+        onclick="printScheme()"
+    >
+        🖨 Print Guide
+    </button>
+
+</div>
 
 
             <p class="note">
@@ -1893,8 +1960,242 @@ async function updateStats() {
         console.error("Could not update survey dashboard:", error);
     }
 }
+// ============================================================
+// SCROLL REVEAL ANIMATION
+// ============================================================
 
+const revealElements = document.querySelectorAll(".reveal");
 
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },
+  {
+    threshold: 0.15
+  }
+);
+
+revealElements.forEach((element) => {
+  revealObserver.observe(element);
+});
+// ============================================================
+// SCHEME FINDER WIZARD
+// ============================================================
+
+let wizardStep = 1;
+
+function openSchemeWizard() {
+  wizardStep = 1;
+
+  document
+    .getElementById("schemeWizard")
+    .classList.remove("hidden");
+
+  renderWizard();
+}
+
+function closeSchemeWizard() {
+  document
+    .getElementById("schemeWizard")
+    .classList.add("hidden");
+}
+
+function renderWizard() {
+
+  const container =
+    document.getElementById("wizardContent");
+
+  if (wizardStep === 1) {
+
+    container.innerHTML = `
+      <p class="eyebrow">STEP 1 OF 2</p>
+
+      <h2>What describes you?</h2>
+
+      <div class="wizard-options">
+
+        <button onclick="selectWizard('Students')">
+          🎓 Student
+        </button>
+
+        <button onclick="selectWizard('Youth')">
+          👨‍💻 Youth
+        </button>
+
+        <button onclick="selectWizard('Eligible Families')">
+          👨‍👩‍👧 Family
+        </button>
+
+        <button onclick="selectWizard('Street Vendors')">
+          🏪 Business / Vendor
+        </button>
+
+        <button onclick="selectWizard('Citizens')">
+          👤 Citizen
+        </button>
+
+      </div>
+    `;
+  }
+}
+
+function selectWizard(audience) {
+
+  document.getElementById("audience").value = audience;
+
+  closeSchemeWizard();
+
+  loadSchemes();
+
+  document
+    .getElementById("results")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+}
+// ============================================================
+// SAVED SCHEMES
+// ============================================================
+
+function getSavedSchemes() {
+  return JSON.parse(
+    localStorage.getItem("savedSchemes") || "[]"
+  );
+}
+
+function toggleSaveScheme(id, button) {
+
+  let saved = getSavedSchemes();
+
+  if (saved.includes(Number(id))) {
+
+    saved = saved.filter(
+      schemeId => schemeId !== Number(id)
+    );
+
+    button.textContent = "♡ Save";
+
+  } else {
+
+    saved.push(Number(id));
+
+    button.textContent = "♥ Saved";
+  }
+
+  localStorage.setItem(
+    "savedSchemes",
+    JSON.stringify(saved)
+  );
+}
+
+function updateChecklist(total) {
+
+  const checked =
+    document.querySelectorAll(
+      ".checklist input:checked"
+    ).length;
+
+  const percentage =
+    total === 0
+      ? 0
+      : (checked / total) * 100;
+
+  document.getElementById(
+    "checklistCount"
+  ).textContent = `${checked} / ${total}`;
+
+  document.getElementById(
+    "checklistProgress"
+  ).style.width = `${percentage}%`;
+}
+function showSearchSuggestions() {
+
+  const input =
+    document.getElementById("search");
+
+  const container =
+    document.getElementById("searchSuggestions");
+
+  const value =
+    input.value.trim().toLowerCase();
+
+  if (!value) {
+    container.innerHTML = "";
+    loadSchemes();
+    return;
+  }
+
+  const suggestions = [
+    "student",
+    "scholarship",
+    "education",
+    "employment",
+    "business",
+    "pension",
+    "digital services"
+  ];
+
+  const matches = suggestions.filter(
+    item => item.includes(value)
+  );
+
+  container.innerHTML = matches
+    .slice(0, 5)
+    .map(
+      item => `
+        <button
+          onclick="selectSuggestion('${item}')"
+        >
+          🔎 ${item}
+        </button>
+      `
+    )
+    .join("");
+
+  loadSchemes();
+}
+
+function selectSuggestion(value) {
+
+  document.getElementById(
+    "search"
+  ).value = value;
+
+  document.getElementById(
+    "searchSuggestions"
+  ).innerHTML = "";
+
+  loadSchemes();
+}
+function shareScheme() {
+
+  if (navigator.share) {
+
+    navigator.share({
+      title: "Welfare Connect",
+      text: "Check out this government welfare scheme.",
+      url: window.location.href
+    });
+
+  } else {
+
+    navigator.clipboard.writeText(
+      window.location.href
+    );
+
+    alert("Link copied!");
+  }
+}
+
+function printScheme() {
+  window.print();
+}
 // ============================================================
 // INITIALIZE EVERYTHING
 // ============================================================
