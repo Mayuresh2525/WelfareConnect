@@ -1256,3 +1256,295 @@ footer small {
     overflow-x: auto;
   }
 }
+
+
+/* ============================================================
+   WELFARE CONNECT — F2 FEATURE ADDITIONS
+============================================================ */
+
+/* Scheme cards */
+.save-btn {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 9px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.save-btn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--soft);
+}
+
+.save-btn:active {
+  transform: translateY(1px);
+}
+
+/* Application progress */
+.application-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 22px 0 28px;
+  padding: 15px;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow-x: auto;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.progress-step span {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #e9edf3;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.progress-step.active {
+  color: var(--blue);
+}
+
+.progress-step.active span {
+  background: var(--blue);
+  color: #fff;
+}
+
+.progress-line {
+  flex: 1;
+  min-width: 18px;
+  height: 2px;
+  background: #dfe5ed;
+}
+
+/* Checklist progress */
+.checklist-progress {
+  margin: 12px 0 14px;
+  padding: 13px;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.checklist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 9px;
+  font-size: 12px;
+}
+
+.checklist-header span {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: #e9edf3;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--blue);
+  transition: width .25s ease;
+}
+
+/* Scheme modal action buttons */
+.official {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  align-items: center;
+}
+
+.official .btn {
+  margin: 0;
+}
+
+/* Search suggestions */
+.search-label {
+  position: relative;
+}
+
+.search-suggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 20;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(23, 32, 51, .12);
+  overflow: hidden;
+}
+
+.search-suggestions:empty {
+  display: none;
+}
+
+.search-suggestions button {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #f0f2f5;
+  background: #fff;
+  color: var(--ink);
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.search-suggestions button:last-child {
+  border-bottom: 0;
+}
+
+.search-suggestions button:hover,
+.search-suggestions button:focus {
+  background: var(--soft);
+  color: var(--blue);
+  outline: none;
+}
+
+.wizard-trigger {
+  margin-top: 12px;
+}
+
+/* Scheme finder wizard */
+.wizard-card {
+  max-width: 620px;
+}
+
+.wizard-card h2 {
+  margin: 5px 0 20px;
+}
+
+.wizard-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.wizard-options button {
+  min-height: 58px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 13px;
+  text-align: left;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.wizard-options button:hover,
+.wizard-options button:focus {
+  border-color: var(--blue);
+  background: var(--soft);
+  color: var(--blue);
+  outline: none;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Don't let reveal make essential content inaccessible if JS is unavailable. */
+.no-js .reveal,
+.reveal.show {
+  visibility: visible;
+}
+
+@media (max-width: 600px) {
+  .wizard-options {
+    grid-template-columns: 1fr;
+  }
+
+  .application-progress {
+    gap: 6px;
+    padding: 12px;
+  }
+
+  .progress-step {
+    font-size: 10px;
+  }
+
+  .progress-step span {
+    width: 23px;
+    height: 23px;
+  }
+
+  .official {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .official .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .wizard-trigger {
+    width: 100%;
+  }
+}
+
+@media print {
+  body > *:not(#modal) {
+    display: none !important;
+  }
+
+  #modal {
+    position: static;
+    display: block !important;
+    background: #fff;
+    padding: 0;
+  }
+
+  #modal .modal-card {
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+    box-shadow: none;
+    border: 0;
+  }
+
+  #modal .close,
+  #modal .official {
+    display: none !important;
+  }
+}

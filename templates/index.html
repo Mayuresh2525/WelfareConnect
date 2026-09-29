@@ -37,7 +37,7 @@
 </header>
 
 
-<section id="home" class="hero">
+<section id="home" class="hero reveal">
 
   <div class="hero-copy">
 
@@ -110,7 +110,7 @@
 </section>
 
 
-<section class="section intro">
+<section class="section intro reveal">
 
   <div class="intro-card">
 
@@ -141,7 +141,7 @@
 </section>
 
 
-<section id="finder" class="section">
+<section id="finder" class="section reveal">
 
   <div class="head">
 
@@ -156,6 +156,14 @@
     <p>
       Search by keyword, category or target group.
     </p>
+
+    <button
+      class="btn secondary wizard-trigger"
+      type="button"
+      onclick="openSchemeWizard()"
+    >
+      ✨ Find My Schemes
+    </button>
 
   </div>
 
@@ -213,8 +221,15 @@
         <input
           id="search"
           placeholder="e.g. student, pension, employment"
-          oninput="loadSchemes()"
+          oninput="showSearchSuggestions()"
+          autocomplete="off"
         >
+
+        <div
+          id="searchSuggestions"
+          class="search-suggestions"
+          aria-live="polite"
+        ></div>
 
       </label>
 
@@ -228,7 +243,7 @@
 </section>
 
 
-<section id="guides" class="section alt">
+<section id="guides" class="section alt reveal">
 
   <div class="head">
 
@@ -367,7 +382,7 @@
 </section>
 
 
-<section id="survey" class="section alt">
+<section id="survey" class="section alt reveal">
 
   <div class="head">
 
@@ -410,7 +425,7 @@
 </section>
 
 
-<section id="dashboard" class="section">
+<section id="dashboard" class="section reveal">
 
   <div class="head">
     <p class="eyebrow">PROJECT ANALYTICS</p>
@@ -545,6 +560,42 @@
   </div>
 
 </footer>
+
+
+<!-- ============================================================
+     SCHEME FINDER WIZARD
+============================================================ -->
+
+<div
+  id="schemeWizard"
+  class="modal hidden"
+  onclick="closeSchemeWizard()"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="wizardTitle"
+>
+  <div
+    class="modal-card wizard-card"
+    onclick="event.stopPropagation()"
+  >
+
+    <button
+      class="close"
+      type="button"
+      onclick="closeSchemeWizard()"
+      aria-label="Close scheme finder"
+    >
+      ×
+    </button>
+
+    <div id="wizardContent">
+      <p class="eyebrow">STEP 1 OF 2</p>
+      <h2 id="wizardTitle">Find schemes for you</h2>
+    </div>
+
+  </div>
+</div>
+
 
 
 <div
