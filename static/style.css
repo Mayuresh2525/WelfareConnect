@@ -1528,3 +1528,337 @@ footer small {
     display: none !important;
   }
 }
+
+/* ============================================================
+   WELFARE CONNECT - MODERN PAGE ANIMATIONS
+============================================================ */
+
+
+/* ------------------------------------------------------------
+   DEFAULT REVEAL
+------------------------------------------------------------ */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+        opacity 0.7s ease,
+        transform 0.7s ease;
+}
+
+.reveal.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* ------------------------------------------------------------
+   LEFT REVEAL
+------------------------------------------------------------ */
+
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-45px);
+    transition:
+        opacity 0.75s ease,
+        transform 0.75s ease;
+}
+
+.reveal-left.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+/* ------------------------------------------------------------
+   RIGHT REVEAL
+------------------------------------------------------------ */
+
+.reveal-right {
+    opacity: 0;
+    transform: translateX(45px);
+    transition:
+        opacity 0.75s ease,
+        transform 0.75s ease;
+}
+
+.reveal-right.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+/* ------------------------------------------------------------
+   SCALE REVEAL
+------------------------------------------------------------ */
+
+.reveal-scale {
+    opacity: 0;
+    transform: scale(0.92);
+    transition:
+        opacity 0.7s ease,
+        transform 0.7s ease;
+}
+
+.reveal-scale.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+/* ------------------------------------------------------------
+   ZOOM REVEAL
+------------------------------------------------------------ */
+
+.reveal-zoom {
+    opacity: 0;
+    transform: scale(0.88) translateY(25px);
+    transition:
+        opacity 0.75s ease,
+        transform 0.75s ease;
+}
+
+.reveal-zoom.show {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+
+/* ------------------------------------------------------------
+   STAGGER
+------------------------------------------------------------ */
+
+.stagger-1 {
+    transition-delay: 0.08s;
+}
+
+.stagger-2 {
+    transition-delay: 0.16s;
+}
+
+.stagger-3 {
+    transition-delay: 0.24s;
+}
+
+.stagger-4 {
+    transition-delay: 0.32s;
+}
+
+
+/* ------------------------------------------------------------
+   SCHEME CARD HOVER
+------------------------------------------------------------ */
+
+.card {
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.card.reveal {
+    transition:
+        opacity 0.7s ease,
+        transform 0.7s ease,
+        box-shadow 0.3s ease;
+}
+
+.card.reveal.show:hover {
+    transform: translateY(-6px);
+    box-shadow:
+        0 14px 30px rgba(23, 32, 51, 0.10);
+}
+
+
+/* ------------------------------------------------------------
+   STEP HOVER
+------------------------------------------------------------ */
+
+.step {
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.step.show:hover,
+.step:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 14px 30px rgba(23, 32, 51, 0.09);
+}
+
+
+/* ------------------------------------------------------------
+   BUTTONS
+------------------------------------------------------------ */
+
+.btn,
+.link-btn,
+.wizard-options button {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+
+/* ------------------------------------------------------------
+   NAVIGATION
+------------------------------------------------------------ */
+
+.nav a {
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.nav a:hover {
+    transform: translateY(-1px);
+}
+
+
+/* ------------------------------------------------------------
+   QUIZ
+------------------------------------------------------------ */
+
+.quiz-option {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.quiz-option:hover {
+    transform: translateX(5px);
+}
+
+
+/* ------------------------------------------------------------
+   HERO
+------------------------------------------------------------ */
+
+.hero-visual {
+    animation: heroFloat 4s ease-in-out infinite;
+}
+
+
+/* ------------------------------------------------------------
+   HERO MINI CARDS
+------------------------------------------------------------ */
+
+.mini-card {
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.mini-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 12px 26px rgba(23, 32, 51, 0.12);
+}
+
+
+/* ------------------------------------------------------------
+   INTRO ICON
+------------------------------------------------------------ */
+
+.big-icon {
+    transition:
+        transform 0.3s ease;
+}
+
+.intro-card:hover .big-icon {
+    transform: scale(1.08) rotate(-3deg);
+}
+
+
+/* ------------------------------------------------------------
+   DASHBOARD
+------------------------------------------------------------ */
+
+.dashboard-stat,
+.dashboard-panel {
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.dashboard-stat:hover,
+.dashboard-panel:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 14px 30px rgba(23, 32, 51, 0.08);
+}
+
+
+/* ------------------------------------------------------------
+   MODAL
+------------------------------------------------------------ */
+
+.modal:not(.hidden) .modal-card {
+    animation:
+        modalEnter 0.3s ease both;
+}
+
+
+/* ------------------------------------------------------------
+   HERO FLOAT
+------------------------------------------------------------ */
+
+@keyframes heroFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+
+}
+
+
+/* ------------------------------------------------------------
+   MODAL ENTER
+------------------------------------------------------------ */
+
+@keyframes modalEnter {
+
+    from {
+        opacity: 0;
+        transform: scale(0.94) translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+}
+
+
+/* ------------------------------------------------------------
+   ACCESSIBILITY
+------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+}

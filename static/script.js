@@ -513,7 +513,7 @@ async function loadSchemes() {
             data.map(
                 s => `
 
-                <article class="card reveal">
+                <article class="card reveal stagger-${(s.id % 4) + 1}">
 
                     <span class="tag">
                         ${s.category}
@@ -2138,7 +2138,13 @@ async function updateStats() {
 function initializeRevealAnimation() {
 
     const revealElements =
-        document.querySelectorAll(".reveal:not(.show)");
+    document.querySelectorAll(
+        ".reveal:not(.show), " +
+        ".reveal-left:not(.show), " +
+        ".reveal-right:not(.show), " +
+        ".reveal-scale:not(.show), " +
+        ".reveal-zoom:not(.show)"
+    );
 
     if (
         !revealElements.length ||
