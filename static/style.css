@@ -1263,27 +1263,7 @@ footer small {
 ============================================================ */
 
 /* Scheme cards */
-.save-btn {
-  border: 1px solid var(--line);
-  background: #fff;
-  color: var(--ink);
-  border-radius: 9px;
-  padding: 7px 10px;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: .2s ease;
-}
 
-.save-btn:hover {
-  border-color: var(--blue);
-  color: var(--blue);
-  background: var(--soft);
-}
-
-.save-btn:active {
-  transform: translateY(1px);
-}
 
 /* Application progress */
 .application-progress {

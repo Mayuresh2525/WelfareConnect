@@ -544,12 +544,7 @@ async function loadSchemes() {
     View Full Guide →
   </button>
 
-  <button
-    class="save-btn"
-    onclick="toggleSaveScheme(${s.id}, this)"
-  >
-    ♡ Save
-  </button>
+  
 
 </div>
 
@@ -2313,64 +2308,9 @@ function selectWizard(audience) {
 // SAVED SCHEMES
 // ============================================================
 
-function getSavedSchemes() {
 
-    try {
 
-        return JSON.parse(
-            localStorage.getItem("savedSchemes") || "[]"
-        );
 
-    } catch (error) {
-
-        console.warn(
-            "Could not read saved schemes:",
-            error
-        );
-
-        return [];
-
-    }
-
-}
-
-function toggleSaveScheme(id, button) {
-
-    if (!button) {
-        return;
-    }
-
-    let saved =
-        getSavedSchemes();
-
-    const schemeId =
-        Number(id);
-
-    if (saved.includes(schemeId)) {
-
-        saved =
-            saved.filter(
-                savedId => savedId !== schemeId
-            );
-
-        button.textContent =
-            "♡ Save";
-
-    } else {
-
-        saved.push(schemeId);
-
-        button.textContent =
-            "♥ Saved";
-
-    }
-
-    localStorage.setItem(
-        "savedSchemes",
-        JSON.stringify(saved)
-    );
-
-}
 
 
 // ============================================================
