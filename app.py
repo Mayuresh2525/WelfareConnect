@@ -119,7 +119,6 @@ def home():
 def get_schemes():
     q = request.args.get("q", "").strip().lower()
     category = request.args.get("category", "All")
-    audience = request.args.get("audience", "All")
 
     results = []
 
@@ -135,9 +134,6 @@ def get_schemes():
             continue
 
         if category != "All" and s["category"] != category:
-            continue
-
-        if audience != "All" and s["audience"] != audience:
             continue
 
         results.append(s)
@@ -452,6 +448,337 @@ def track_activity():
 @app.get("/api/health")
 def health():
     return jsonify({"status": "ok", "project": "Welfare Connect"})
+
+
+# --------------------------------------------------
+# CHATBOT — KNOWLEDGE-BASE ASSISTANT
+# --------------------------------------------------
+
+def _scheme_search(query, max_results=5):
+    """
+    Return up to max_results schemes ranked by relevance to query.
+    Scoring: exact name match > partial name > category > audience >
+             eligibility/benefits/summary > documents/steps.
+    Returns list of (score, scheme) tuples — the score is kept so
+    callers can check dominance.
+    """
+    q = query.lower().strip()
+    if not q:
+        return []
+
+    scored = []
+    tokens = [t for t in q.replace(",", " ").split() if len(t) > 2]
+
+    for s in SCHEMES:
+        score = 0
+
+        name_l = s["name"].lower()
+        # Exact or near-exact name match
+        if q == name_l:
+            score += 100
+        elif q in name_l:
+            score += 60
+        else:
+            # Partial token matches on name
+            for t in tokens:
+                if t in name_l:
+                    score += 15
+
+        # Category / audience match
+        cat_l = s["category"].lower()
+        aud_l = s["audience"].lower()
+        for t in tokens:
+            if t in cat_l:
+                score += 12
+            if t in aud_l:
+                score += 10
+
+        # Summary / eligibility / benefits
+        rich_blob = " ".join([
+            s.get("summary", ""),
+            s.get("eligibility", ""),
+            s.get("benefits", ""),
+        ]).lower()
+        for t in tokens:
+            if t in rich_blob:
+                score += 5
+
+        # Documents / steps
+        detail_blob = " ".join(
+            s.get("documents", []) + s.get("steps", [])
+        ).lower()
+        for t in tokens:
+            if t in detail_blob:
+                score += 2
+
+        if score > 0:
+            scored.append((score, s))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+    return scored[:max_results]   # returns (score, scheme) tuples
+
+
+# Intent keywords
+_INTENT_DOCUMENT    = {"document", "documents", "doc", "docs", "papers",
+                       "paperwork", "certificate", "certificates", "proof",
+                       "required", "need", "needed", "bring", "submit"}
+_INTENT_ELIGIBILITY = {"eligible", "eligibility", "qualify", "qualification",
+                       "criteria", "who", "can", "allowed", "requirement",
+                       "requirements", "age", "income", "limit"}
+_INTENT_BENEFITS    = {"benefit", "benefits", "get", "receive", "amount",
+                       "money", "pension", "loan", "subsidy", "grant",
+                       "scholarship", "stipend", "pay", "payment"}
+_INTENT_HOW_APPLY   = {"apply", "application", "register", "registration",
+                       "process", "step", "steps", "procedure", "how",
+                       "enroll", "enrolment", "start"}
+
+_CAT_MAP = {
+    "education":            "Education",
+    "scholarship":          "Education",
+    "study":                "Education",
+    "student":              "Education",
+    "school":               "Education",
+    "college":              "Education",
+    "skill":                "Skills & Employment",
+    "skills":               "Skills & Employment",
+    "employment":           "Skills & Employment",
+    "job":                  "Skills & Employment",
+    "jobs":                 "Skills & Employment",
+    "training":             "Skills & Employment",
+    "apprentice":           "Skills & Employment",
+    "apprenticeship":       "Skills & Employment",
+    "work":                 "Skills & Employment",
+    "career":               "Skills & Employment",
+    "business":             "Business & Livelihood",
+    "livelihood":           "Business & Livelihood",
+    "entrepreneur":         "Business & Livelihood",
+    "enterprise":           "Business & Livelihood",
+    "vendor":               "Business & Livelihood",
+    "food":                 "Business & Livelihood",
+    "pension":              "Pension & Social Security",
+    "insurance":            "Pension & Social Security",
+    "security":             "Pension & Social Security",
+    "retirement":           "Pension & Social Security",
+    "elderly":              "Pension & Social Security",
+    "senior":               "Pension & Social Security",
+    "old":                  "Pension & Social Security",
+    "digital":              "Digital Services",
+    "online":               "Digital Services",
+    "language":             "Digital Services",
+    "mobile":               "Digital Services",
+    "sim":                  "Digital Services",
+    "translate":            "Digital Services",
+    "translation":          "Digital Services",
+    "agriculture":          "Agriculture",
+    "farmer":               "Agriculture",
+    "farming":              "Agriculture",
+    "kisan":                "Agriculture",
+    "financial":            "Financial Inclusion",
+    "bank":                 "Financial Inclusion",
+    "banking":              "Financial Inclusion",
+    "account":              "Financial Inclusion",
+    "unbanked":             "Financial Inclusion",
+}
+
+
+def _detect_intent(tokens):
+    t = set(tokens)
+    if t & _INTENT_DOCUMENT:
+        return "documents"
+    if t & _INTENT_ELIGIBILITY:
+        return "eligibility"
+    if t & _INTENT_BENEFITS:
+        return "benefits"
+    if t & _INTENT_HOW_APPLY:
+        return "apply"
+    return "general"
+
+
+def _detect_category(tokens):
+    for t in tokens:
+        if t in _CAT_MAP:
+            return _CAT_MAP[t]
+    return None
+
+
+def _build_response(message):
+    """
+    Returns a dict:
+      type: "scheme_detail" | "scheme_list" | "not_found" | "greeting"
+      text: str
+      schemes: list of scheme dicts (slim, safe for JSON)
+      intent: str
+    """
+    raw = message.strip()
+    q_lower = raw.lower()
+    tokens = [t.strip("?!.,;:'\"()") for t in q_lower.split() if len(t.strip("?!.,;:'\"()")) > 1]
+
+    # ------------------------------------------------------------------
+    # Greeting / opener
+    # ------------------------------------------------------------------
+    greet_words = {"hi", "hello", "hey", "namaste", "hii", "helo", "help"}
+    if set(tokens) & greet_words and len(tokens) <= 4:
+        return {
+            "type": "greeting",
+            "text": (
+                "Hello! I'm the WelfareConnect Assistant. "
+                "I can help you discover and understand government welfare schemes "
+                "available in our database.\n\n"
+                "You can ask me things like:\n"
+                "• \"I'm a student looking for financial help\"\n"
+                "• \"What documents do I need for PM-KISAN?\"\n"
+                "• \"Tell me about PM Vishwakarma\"\n"
+                "• \"Show pension schemes\"\n\n"
+                "What would you like to know?"
+            ),
+            "schemes": [],
+            "intent": "greeting"
+        }
+
+    # ------------------------------------------------------------------
+    # Run search
+    # ------------------------------------------------------------------
+    scored  = _scheme_search(raw, max_results=5)
+    matches = [s for _, s in scored]
+    intent  = _detect_intent(tokens)
+    cat     = _detect_category(tokens)
+
+    # ------------------------------------------------------------------
+    # If top result is a very strong name match, give scheme detail
+    # ------------------------------------------------------------------
+    if matches:
+        top_score       = scored[0][0]
+        top             = scored[0][1]
+        second_score    = scored[1][0] if len(scored) > 1 else 0
+
+        top_name_l = top["name"].lower()
+        name_words = set(top_name_l.replace("-", " ").split())
+        query_words = set(q_lower.replace("-", " ").split())
+        overlap = name_words & query_words
+        filler = {"the", "for", "and", "are", "what", "tell", "about",
+                  "me", "find", "show", "give", "get", "how", "with",
+                  "can", "this", "that", "have", "need", "want", "know",
+                  "info", "information", "details", "scheme", "schemes",
+                  "yojana", "pradhan", "mantri", "rashtriya", "national"}
+
+        name_meaningful    = name_words  - filler
+        query_meaningful   = query_words - filler
+        meaningful_overlap = name_meaningful & query_meaningful
+
+        strong_name_match = (
+            q_lower in top_name_l or
+            top_name_l in q_lower or
+            len(overlap) >= 3 or
+            (len(meaningful_overlap) >= 1 and len(name_meaningful) <= 3) or
+            (len(name_meaningful) > 0 and
+             len(meaningful_overlap) / len(name_meaningful) >= 0.6) or
+            # Top score dominates runner-up by 2× and has a name component
+            (top_score >= 15 and second_score == 0) or
+            (top_score >= 20 and top_score >= second_score * 2)
+        )
+
+        if strong_name_match and intent in ("general", "benefits", "eligibility", "documents", "apply"):
+            s = top
+            intro = {
+                "general":     f"Here's what I found about **{s['name']}** in the WelfareConnect database:",
+                "benefits":    f"Here are the **benefits** of **{s['name']}** from our database:",
+                "eligibility": f"Here are the **eligibility criteria** for **{s['name']}** from our database:",
+                "documents":   f"Here are the **documents required** for **{s['name']}** from our database:",
+                "apply":       f"Here's **how to apply** for **{s['name']}** from our database:",
+            }[intent]
+
+            return {
+                "type":   "scheme_detail",
+                "text":   intro,
+                "schemes": [s],
+                "intent": intent
+            }
+
+    # ------------------------------------------------------------------
+    # Category-based list
+    # ------------------------------------------------------------------
+    if cat and not matches:
+        cat_schemes = [s for s in SCHEMES if s["category"] == cat][:5]
+        if cat_schemes:
+            return {
+                "type":   "scheme_list",
+                "text":   (
+                    f"I found {len(cat_schemes)} scheme(s) in the "
+                    f"**{cat}** category that may be relevant. "
+                    "Please check each scheme's official eligibility criteria to confirm whether you qualify."
+                ),
+                "schemes": cat_schemes,
+                "intent":  "general"
+            }
+
+    # ------------------------------------------------------------------
+    # Keyword search returned results
+    # ------------------------------------------------------------------
+    if matches:
+        if len(matches) == 1:
+            s = matches[0]
+            return {
+                "type":   "scheme_detail",
+                "text":   f"The closest match in our database is **{s['name']}**:",
+                "schemes": [s],
+                "intent":  intent
+            }
+
+        cat_hint = f" in the **{cat}** category" if cat else ""
+        return {
+            "type":   "scheme_list",
+            "text":   (
+                f"I found {len(matches)} scheme(s){cat_hint} that may be relevant to your question. "
+                "These are based on the information available in the WelfareConnect database. "
+                "Please verify your eligibility on the official portal before applying."
+            ),
+            "schemes": matches,
+            "intent":  intent
+        }
+
+    # ------------------------------------------------------------------
+    # No results
+    # ------------------------------------------------------------------
+    return {
+        "type":   "not_found",
+        "text":   (
+            "I wasn't able to find scheme information matching your question in the "
+            "WelfareConnect database. The database currently covers 30 central and state "
+            "government schemes.\n\n"
+            "You could try:\n"
+            "• Rephrasing with different keywords (e.g. \"student scholarship\", \"pension\", \"loan\")\n"
+            "• Using the **Find Schemes** section to browse and filter all schemes\n"
+            "• Visiting the National Government Services Portal at india.gov.in for a broader search"
+        ),
+        "schemes": [],
+        "intent":  "not_found"
+    }
+
+
+@app.post("/api/chat")
+def chat():
+    data    = request.get_json(silent=True) or {}
+    message = str(data.get("message", "")).strip()[:300]
+
+    if not message:
+        return jsonify({
+            "type":    "not_found",
+            "text":    "Please type a question to get started.",
+            "schemes": [],
+            "intent":  "empty"
+        })
+
+    result = _build_response(message)
+
+    # Slim down schemes for the response — keep only fields the UI needs
+    slim_fields = ("id", "name", "category", "audience", "summary",
+                   "eligibility", "benefits", "documents", "steps", "official")
+    result["schemes"] = [
+        {k: s[k] for k in slim_fields if k in s}
+        for s in result["schemes"]
+    ]
+
+    return jsonify(result)
 
 
 # ==================================================

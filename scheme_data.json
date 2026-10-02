@@ -298,5 +298,488 @@
     "official": "https://sas.mahait.org/",
     "source": "Government of Maharashtra / Social Justice & Special Assistance Department",
     "verified": "2026-09-26"
+  },
+  {
+    "id": 13,
+    "name": "PM-USP Central Sector Scheme of Scholarship (CSSS)",
+    "category": "Education",
+    "audience": "College & University Students",
+    "summary": "A merit-cum-means scholarship from the Ministry of Education for meritorious students pursuing higher education at colleges and universities across India, to help meet day-to-day expenses during their studies.",
+    "eligibility": "Students who scored above the 80th percentile of successful candidates in their relevant stream in Class XII from a recognised Board; enrolled in a regular (non-correspondence/distance) undergraduate or postgraduate course at a college or university; family income from all sources not exceeding ₹4.5 lakh per annum; not receiving any other scholarship or fee reimbursement. Diploma students and students who took a gap year after Class XII are not eligible.",
+    "benefits": "₹10,000 per annum for the first three years of undergraduate study, and ₹20,000 per annum for postgraduate and professional degree courses (e.g. Medical, Engineering). Scholarship is disbursed directly to the student's bank account through DBT via the National Scholarship Portal.",
+    "documents": [
+      "Class XII mark sheet (for fresh applicants) or latest mark sheet (for renewal)",
+      "College/university enrolment/admission proof",
+      "Family income certificate issued by a competent authority",
+      "Bank account details (student's own account)",
+      "Aadhaar number",
+      "Caste certificate (if applicable)"
+    ],
+    "steps": [
+      "Register on the National Scholarship Portal at scholarships.gov.in",
+      "Select 'Central Sector Scheme of Scholarship (PM-USP CSSS)' under Central Schemes",
+      "Fill in the application with academic, personal, and income details",
+      "Upload required documents",
+      "Submit before the closing date announced on NSP",
+      "Track application and payment status through the NSP dashboard"
+    ],
+    "official": "https://scholarships.gov.in/",
+    "source": "Department of Higher Education, Ministry of Education / National Scholarship Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 14,
+    "name": "SWAYAM — Study Webs of Active Learning for Young Aspiring Minds",
+    "category": "Education",
+    "audience": "Students, Learners & Working Professionals",
+    "summary": "A Government of India platform offering free online courses taught by faculty from premier institutions (IITs, IIMs, central universities and others) covering school, undergraduate, postgraduate, and professional levels. Learners can earn certificates and, through their university, transfer up to 40% of semester credits via SWAYAM courses as per UGC regulations.",
+    "eligibility": "Open to anyone — there is no age, income, or educational qualification requirement for enrolling in courses. Any learner can register and access course content for free. To earn a proctored certificate, learners must register for the end-term exam (a fee applies) and meet the minimum marks criteria set by the course.",
+    "benefits": "Free access to high-quality course content from top institutions. Proctored certificates on passing the exam. Academic credit transfer of up to 40% of semester courses as per UGC Credit Framework, subject to the learner's university policy. Supports lifelong learning and skill development.",
+    "documents": [
+      "Valid email address for registration",
+      "Identity proof (for proctored examination registration)",
+      "No additional documents required to access or enrol in courses"
+    ],
+    "steps": [
+      "Visit swayam.gov.in and create a free learner account",
+      "Browse or search for a course by subject, level, or institution",
+      "Enrol in the desired course — all content is free",
+      "Complete course assignments and watch video lectures",
+      "Register for the proctored exam (paid, optional) if a certificate is desired",
+      "Check with your college/university about credit transfer procedures for SWAYAM courses"
+    ],
+    "official": "https://swayam.gov.in/",
+    "source": "Ministry of Education / SWAYAM — Government of India",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 15,
+    "name": "AICTE Pragati Scholarship for Girl Students",
+    "category": "Education",
+    "audience": "Girl Students in Technical Education",
+    "summary": "An AICTE scholarship to support girl students pursuing technical education (degree or diploma) at AICTE-approved institutions, encouraging women to enter and complete technical courses.",
+    "eligibility": "Girl students admitted to the first year of an AICTE-approved degree (B.E./B.Tech/B.Arch/etc.) or diploma programme; family income from all sources not exceeding ₹8 lakh per annum; maximum two girls per family are eligible; not receiving any other government scholarship simultaneously.",
+    "benefits": "Up to ₹50,000 per annum per student, covering tuition fee up to ₹30,000 or at actuals, whichever is less, plus ₹2,000 per month for 10 months as incidentals (totalling ₹20,000). Disbursed annually for the duration of the course subject to maintaining eligibility.",
+    "documents": [
+      "Aadhaar card",
+      "Admission letter / college enrolment proof from an AICTE-approved institution",
+      "Family income certificate issued by a State/UT government authority",
+      "Bank account details (student's own account)",
+      "Fee receipt from the institution",
+      "Caste certificate (if applicable)"
+    ],
+    "steps": [
+      "Register on the National Scholarship Portal at scholarships.gov.in",
+      "Select AICTE Pragati Scholarship under Central Schemes",
+      "Complete the application with personal, academic, and income details",
+      "Upload required documents",
+      "Submit the application before the advertised deadline",
+      "Track application and disbursement status on the NSP portal"
+    ],
+    "official": "https://scholarships.gov.in/",
+    "source": "All India Council for Technical Education (AICTE) / National Scholarship Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 16,
+    "name": "INSPIRE Scholarship for Higher Education (SHE)",
+    "category": "Education",
+    "audience": "Science Students (Top 1% in Class XII)",
+    "summary": "A Department of Science and Technology (DST) scholarship that encourages talented students to pursue natural and basic sciences at the undergraduate and postgraduate level, building a strong base of science researchers in India.",
+    "eligibility": "Students who secured aggregate marks within the top 1% in their Class XII examination from any State or Central Board and are pursuing (or have been admitted to) a Bachelor's or Master's programme in natural or basic sciences (B.Sc./B.S./Int. M.Sc./M.S. or equivalent) at a recognised institution. Students admitted through JEE, NEET, KVPY, and Olympiad routes are also eligible through specific channels.",
+    "benefits": "₹80,000 per annum (₹6,667 per month) for up to five years of undergraduate and postgraduate study in natural/basic sciences. Also includes a summer attachment programme with research institutions.",
+    "documents": [
+      "Class XII mark sheet or board certificate as proof of eligibility",
+      "Class X mark sheet or certificate as proof of date of birth",
+      "Admission/enrolment proof from the institution (B.Sc./M.Sc. or equivalent)",
+      "Valid email address for portal registration",
+      "Bank account details",
+      "Other documents as required by the online application form"
+    ],
+    "steps": [
+      "Register on the INSPIRE portal at online-inspire.gov.in",
+      "Select 'Scholarship for Higher Education (SHE)' and complete the application",
+      "Upload Class XII mark sheet, Class X certificate, and admission proof",
+      "Submit the application before the advertised deadline",
+      "Applications are screened internally, followed by final selection by an Expert Committee",
+      "Results and offer letters are communicated through the INSPIRE web-portal account"
+    ],
+    "official": "https://www.online-inspire.gov.in/",
+    "source": "Department of Science and Technology (DST), Government of India / INSPIRE Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 17,
+    "name": "National Means-cum-Merit Scholarship Scheme (NMMSS)",
+    "category": "Education",
+    "audience": "Meritorious Students from Low-Income Families",
+    "summary": "A central government scholarship to arrest the dropout of meritorious students from economically weaker sections at Class VIII and support them to continue their secondary and higher secondary education.",
+    "eligibility": "Students studying in Class VIII in State Government, Government-aided, or local body schools; family income from all sources not exceeding ₹3.5 lakh per annum; must qualify the State-level NMMSS examination (MAT + SAT with a minimum of 40% aggregate, or 32% for SC/ST students); must secure at least 55% marks in Class VII (50% for SC/ST). Private school students and students attending central government schools (Navodaya, KVS, Sainik, etc.) are not eligible.",
+    "benefits": "₹12,000 per annum (₹1,000 per month) for study in Classes IX to XII, subject to continuation and renewal criteria. Disbursed directly to the student's bank account through DBT.",
+    "documents": [
+      "Class VII mark sheet",
+      "Income certificate issued by a competent authority (showing income ≤ ₹3.5 lakh per annum)",
+      "State NMMSS examination admit card and score card",
+      "School enrolment proof",
+      "Bank account details (student's account)",
+      "Aadhaar number",
+      "Caste certificate (SC/ST students)"
+    ],
+    "steps": [
+      "Check eligibility and apply for the State-level NMMSS examination through your school or State Education Board",
+      "Qualify the MAT and SAT examination with the required minimum marks",
+      "Register on the National Scholarship Portal at scholarships.gov.in",
+      "Select 'National Means-cum-Merit Scholarship Scheme' and complete the application",
+      "Upload income certificate and other required documents",
+      "Submit before the advertised deadline and track status on NSP"
+    ],
+    "official": "https://scholarships.gov.in/",
+    "source": "Department of School Education & Literacy (DSEL), Ministry of Education / NSP",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 18,
+    "name": "National Apprenticeship Training Scheme (NATS)",
+    "category": "Education",
+    "audience": "Graduate & Diploma Holders",
+    "summary": "A Ministry of Education scheme under the Apprentices Act, 1961, that provides practical on-the-job training to fresh engineering graduates, diploma holders, and vocational certificate holders with participating industries across India, bridging the gap between academic knowledge and industry skills.",
+    "eligibility": "Fresh graduates (B.E./B.Tech or equivalent) and diploma holders from recognised institutions who have not yet undergone apprenticeship training under NATS. Typically for candidates who have completed their degree or diploma and are looking for practical industry exposure. Vocational certificate holders in relevant fields are also eligible.",
+    "benefits": "Stipend paid by the employer (minimum rates prescribed by the government, revised from April 2026). On-the-job training of 6 months to 1 year at a registered establishment. Certificate of Apprenticeship Training on completion, issued by BOAT/BOPT. Government shares part of the stipend cost for eligible apprentices through DBT.",
+    "documents": [
+      "Degree/Diploma certificate or provisional certificate",
+      "Mark sheets from the qualifying examination",
+      "Aadhaar card",
+      "Bank account details for DBT stipend",
+      "Passport-size photograph",
+      "Caste/disability certificate if applicable"
+    ],
+    "steps": [
+      "Register as a student/graduate on the NATS portal at nats.education.gov.in",
+      "Complete the profile with academic details and preferences",
+      "Search for apprenticeship vacancies listed by registered establishments",
+      "Apply to a suitable vacancy and await selection by the establishment",
+      "Complete the apprenticeship contract formalities on the portal",
+      "Undergo the training period and collect the apprenticeship certificate on completion"
+    ],
+    "official": "https://nats.education.gov.in/",
+    "source": "Board of Apprenticeship and Training (BOAT/BOPT) / Ministry of Education, Government of India",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 19,
+    "name": "National Apprenticeship Promotion Scheme (NAPS)",
+    "category": "Skills & Employment",
+    "audience": "Apprentices & Employers",
+    "summary": "A Ministry of Skill Development and Entrepreneurship scheme that promotes apprenticeship training in India by sharing the cost of stipend with employers and supporting basic training, making it easier for establishments to hire and train apprentices under the Apprentices Act.",
+    "eligibility": "Any employer registered under the Apprentices Act can participate. Apprentices must be at least 14 years of age and meet the educational qualification prescribed for the relevant trade. The stipend-sharing benefit applies to apprentices engaged by eligible establishments through the official apprenticeship portal.",
+    "benefits": "Government reimburses 25% of the prescribed stipend per apprentice per month, subject to a maximum of ₹1,500 per month per apprentice. Additionally, basic training cost is shared with Basic Training Providers up to ₹7,500 (one-time, for 500 hours / 3 months) per eligible trainee. This reduces the financial burden on employers and encourages wider apprenticeship engagement.",
+    "documents": [
+      "Employer: Business/establishment registration details",
+      "Apprentice: Age proof and educational qualification certificate",
+      "Apprentice: Aadhaar card",
+      "Apprentice: Bank account details for stipend DBT",
+      "Apprenticeship contract / appointment letter"
+    ],
+    "steps": [
+      "Employers register their establishment on the Apprenticeship Portal at apprenticeship.gov.in",
+      "Post apprenticeship vacancies and select candidates",
+      "Register the apprentice and file the apprenticeship contract on the portal",
+      "Apprentice undergoes on-the-job training as per the trade curriculum",
+      "Employer claims stipend reimbursement through the portal after each pay period",
+      "Apprentice receives government share of stipend through DBT into their bank account"
+    ],
+    "official": "https://www.apprenticeship.gov.in/",
+    "source": "Ministry of Skill Development and Entrepreneurship / Apprenticeship India Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 20,
+    "name": "National Career Service (NCS) Portal",
+    "category": "Skills & Employment",
+    "audience": "Job Seekers, Students & Employers",
+    "summary": "A free digital platform from the Ministry of Labour and Employment that connects job seekers with employers across India. It offers job listings in both private and government sectors, career counselling, psychometric assessments, details of career centres, and information on job fairs and employment events.",
+    "eligibility": "Any Indian citizen seeking employment or career guidance can register as a job seeker on NCS free of charge. Employers, organisations, and career centres can also register. There is no income or qualification barrier for registration.",
+    "benefits": "Free access to job listings across government and private sectors. Psychometric and aptitude assessment tools to guide career choices. Information about upcoming job fairs and career events. Ability to connect with career centres in your district. NCS does not charge any fee at any stage of registration, job application, or employment-related services.",
+    "documents": [
+      "Valid mobile number and email address for registration",
+      "Educational qualification details",
+      "Work experience details (if any)",
+      "Aadhaar or other identity proof (optional, for enhanced profile)"
+    ],
+    "steps": [
+      "Visit the NCS portal at ncs.gov.in",
+      "Register as a job seeker using your mobile number and email",
+      "Complete your profile with education, skills, and work experience",
+      "Search for jobs by keyword, location, sector, or qualification",
+      "Apply directly to listed vacancies through the portal",
+      "Use the Assessment Tool for career guidance and visit listed Career Centres if needed"
+    ],
+    "official": "https://www.ncs.gov.in/",
+    "source": "Ministry of Labour and Employment, Government of India / NCS Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 21,
+    "name": "PM Vishwakarma",
+    "category": "Skills & Employment",
+    "audience": "Traditional Artisans & Craftspeople",
+    "summary": "A Central Sector Scheme launched in September 2023 to provide end-to-end support to traditional artisans and craftspeople working in 18 identified trades, helping them improve the quality and reach of their products and integrate into formal economic value chains.",
+    "eligibility": "An artisan or craftsperson aged 18 years or above engaged in one of the 18 specified family-based traditional trades in the unorganised sector on a self-employment basis. The applicant should not be enrolled in similar central government credit-based schemes (PMEGP, PM SVANidhi, Mudra). One member per family is eligible. The 18 trades include: Carpenter, Boat Maker, Armourer, Blacksmith, Hammer & Tool Kit Maker, Locksmith, Goldsmith, Potter, Sculptor/Stone Carver, Cobbler, Mason (Raajmistri), Basket/Mat/Broom Maker, Doll & Toy Maker, Barber, Garland Maker, Washerman, Tailor, and Fishing Net Maker.",
+    "benefits": "PM Vishwakarma Certificate and ID Card. Skill training: 5-day basic training and 15+ day advanced training with a stipend of ₹500 per day during training. Toolkit incentive grant of ₹15,000 (disbursed through e-RUPI). Collateral-free credit support: loan up to ₹1 lakh (first tranche) and up to ₹2 lakh (second tranche) at a concessional interest rate of 5% (government bears the interest subvention cap). Digital transaction incentives and market linkage support.",
+    "documents": [
+      "Aadhaar card",
+      "Mobile number linked to Aadhaar",
+      "Ration card or family proof",
+      "Bank account details",
+      "Proof of trade practice (as part of registration verification at Common Service Centre)"
+    ],
+    "steps": [
+      "Visit the nearest Common Service Centre (CSC) for registration — online registration is done through CSC operators",
+      "Undergo skill verification for your trade",
+      "Receive PM Vishwakarma Certificate and ID Card",
+      "Attend basic skill training (5 days) and collect toolkit incentive of ₹15,000",
+      "Optionally enrol for advanced training (15+ days)",
+      "Apply for collateral-free credit through a participating bank or financial institution",
+      "Track benefits and status at pmvishwakarma.gov.in"
+    ],
+    "official": "https://pmvishwakarma.gov.in/",
+    "source": "Ministry of Micro, Small & Medium Enterprises (MSME), Government of India / PM Vishwakarma Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 22,
+    "name": "Rural Self Employment Training Institutes (RSETI)",
+    "category": "Skills & Employment",
+    "audience": "Rural Youth & BPL Households",
+    "summary": "A Ministry of Rural Development initiative under DAY-NRLM to establish dedicated skill-training and entrepreneurship-development institutes in every district of India, providing free residential training to rural youth — particularly from BPL households — to help them start self-employment ventures.",
+    "eligibility": "Rural youth, primarily from Below Poverty Line (BPL) or low-income rural households. Preference is given to beneficiaries of DAY-NRLM SHGs and family members of MGNREGA job-card holders. Minimum educational qualification varies by course. Age is typically 18–45 years, though this may vary by RSETI and programme.",
+    "benefits": "Free residential skill training at a district-level RSETI centre (managed by lead banks sponsored by the government). Training is followed by handholding and credit linkage support to help trainees start their own enterprises. Completion certificate recognised for bank credit linkage. Settlement rate of at least 70% is mandated for RSETIs.",
+    "documents": [
+      "Aadhaar/identity proof",
+      "BPL/income proof or NRLM SHG membership details (if applicable)",
+      "MGNREGA Job Card (if applicable)",
+      "Educational qualification certificate (as required by the specific course)",
+      "Passport-size photograph"
+    ],
+    "steps": [
+      "Identify the RSETI centre in your district through rseti.in or the local block/Gram Panchayat office",
+      "Enquire about upcoming training programmes and enrolment dates",
+      "Submit your application and documents to the RSETI centre",
+      "Attend the free residential training programme",
+      "Receive settlement support and credit linkage assistance from the RSETI after training",
+      "Follow up with the RSETI for handholding support to set up your enterprise"
+    ],
+    "official": "https://www.rseti.in/",
+    "source": "Ministry of Rural Development / DAY-NRLM / RSETI India",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 23,
+    "name": "NIELIT Digital Literacy & IT Certification Courses",
+    "category": "Skills & Employment",
+    "audience": "Citizens Seeking Digital & IT Skills",
+    "summary": "The National Institute of Electronics and Information Technology (NIELIT), under the Ministry of Electronics and Information Technology (MeitY), offers a range of government-certified digital literacy and IT courses — from basic computer awareness to advanced IT certifications — helping citizens and professionals build digital skills through its centres across India.",
+    "eligibility": "Eligibility varies by course level. Basic digital literacy courses such as BCC (Basic Computer Course) and CCC (Course on Computer Concepts) are open to anyone regardless of educational qualification. Higher-level IT and electronics courses require a relevant educational background as specified for each course. SC/ST candidates and persons with disabilities may receive fee concessions as per current guidelines.",
+    "benefits": "Government-recognised certificates from NIELIT/MeitY that are accepted for government jobs and other purposes. Affordable, structured courses ranging from basic digital literacy (BCC, CCC, CCC+, ECC) to advanced IT and electronics programmes. Availability at NIELIT centres across India and through approved private training institutes.",
+    "documents": [
+      "Educational qualification certificate (as required by the specific course)",
+      "Aadhaar/identity proof",
+      "Passport-size photograph",
+      "Caste/disability certificate (if applicable, for fee concession)",
+      "Online fee payment details"
+    ],
+    "steps": [
+      "Visit the NIELIT website at nielit.gov.in and check available courses and current admission notices",
+      "Select a course suitable for your qualification and goals",
+      "Apply online through the NIELIT admission portal at onlineapply.nielit.in",
+      "Complete registration, upload required documents, and pay the course fee online",
+      "Attend classes at a NIELIT centre or approved institute (as applicable)",
+      "Register for and appear in the examination to receive the NIELIT certificate"
+    ],
+    "official": "https://nielit.gov.in/",
+    "source": "National Institute of Electronics and Information Technology (NIELIT) / MeitY, Government of India",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 24,
+    "name": "Stand-Up India",
+    "category": "Business & Livelihood",
+    "audience": "SC/ST and Women Entrepreneurs",
+    "summary": "A Ministry of Finance scheme that facilitates bank loans to Scheduled Caste, Scheduled Tribe, and women entrepreneurs for setting up new (greenfield) enterprises in manufacturing, services, agri-allied, or trading sectors, promoting economic inclusion and entrepreneurship among underrepresented groups.",
+    "eligibility": "SC or ST individual entrepreneur, or a woman entrepreneur, aged 18 years or above. For non-individual enterprises, at least 51% shareholding and controlling stake must be held by an SC/ST or woman entrepreneur. The loan is available only for a greenfield project — the applicant's first venture in the relevant sector. The borrower must not be in default to any bank or financial institution.",
+    "benefits": "Composite bank loan (term loan + working capital) of ₹10 lakh to ₹1 crore per enterprise. The loan is expected to cover up to 85% of the project cost. Interest rate is the bank's lowest applicable rate for the category (not exceeding MCLR + 3% + tenure premium). Repayment period of up to 7 years with a maximum moratorium of 18 months.",
+    "documents": [
+      "Identity proof (Aadhaar, Voter ID, Passport, etc.)",
+      "Address proof",
+      "Caste certificate (SC/ST applicants)",
+      "Project report / business plan",
+      "Educational qualification certificates",
+      "Bank account details and last 6 months' bank statements",
+      "No-objection certificate / trade licence as applicable"
+    ],
+    "steps": [
+      "Check eligibility and use the Loan Application Navigator at standupmitra.in",
+      "Prepare a detailed project report for your proposed greenfield enterprise",
+      "Apply online through the Stand-Up Mitra portal or approach the nearest scheduled bank branch directly",
+      "The bank appraises the application and project report",
+      "On sanction, the composite loan (term loan + working capital) is disbursed",
+      "Track your application status on the Stand-Up Mitra portal"
+    ],
+    "official": "https://www.standupmitra.in/",
+    "source": "Ministry of Finance / SIDBI / Stand-Up Mitra Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 25,
+    "name": "PM Formalisation of Micro Food Processing Enterprises (PMFME)",
+    "category": "Business & Livelihood",
+    "audience": "Micro Food Processors & Food Entrepreneurs",
+    "summary": "A Ministry of Food Processing Industries centrally sponsored scheme to provide financial, technical, and business support for setting up or upgrading micro food processing enterprises across India, with a focus on the One District One Product (ODOP) approach.",
+    "eligibility": "Existing micro food processing enterprises (individual proprietors, SHGs, co-operatives, FPOs, and producer companies) engaged in food processing. The applicant enterprise must typically have an annual turnover of up to ₹25 lakh and fewer than 10 workers. Individual applicants for credit-linked subsidy should own or lease the processing unit. The scheme prioritises ODOP-identified food products for each district.",
+    "benefits": "Credit-linked capital subsidy of 35% of the eligible project cost, with a maximum ceiling of ₹10 lakh per individual enterprise (minimum 10% contribution by the beneficiary). For SHGs, seed capital of ₹4 lakh per SHG (₹40,000 per member) is available for working capital and purchase of small tools. Support for branding, packaging, and marketing. Technical and business capacity-building support.",
+    "documents": [
+      "Aadhaar/identity proof of the proprietor or applicant",
+      "Proof of ownership or lease of the food processing unit",
+      "Project report covering the proposed upgrade/setup",
+      "Bank account details",
+      "Registration/licensing documents (FSSAI, GST, Udyam, as applicable)",
+      "SHG/co-operative registration documents (for group applicants)"
+    ],
+    "steps": [
+      "Visit pmfme.mofpi.gov.in for scheme details, ODOP product list, and application guidelines",
+      "Register on the PMFME portal as an individual or group applicant",
+      "Prepare a project report for the proposed food processing unit upgrade or setup",
+      "Submit the application online along with required documents",
+      "Application is appraised by the District Resource Person (DRP) and the State Nodal Agency",
+      "On approval, the subsidy is disbursed through the bank as a credit-linked back-end subsidy after loan disbursement"
+    ],
+    "official": "https://pmfme.mofpi.gov.in/",
+    "source": "Ministry of Food Processing Industries (MoFPI), Government of India / PMFME Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 26,
+    "name": "Pradhan Mantri Shram Yogi Maan-dhan (PM-SYM)",
+    "category": "Pension & Social Security",
+    "audience": "Unorganised Sector Workers",
+    "summary": "A voluntary and contributory pension scheme for workers in the unorganised sector, ensuring a minimum monthly pension of ₹3,000 after the age of 60, providing financial security in old age to domestic workers, construction workers, street vendors, rag pickers, agricultural labourers, and similar workers.",
+    "eligibility": "Unorganised sector workers aged 18 to 40 years with a monthly income of ₹15,000 or less. The worker should not be a member of EPFO, ESIC, or NPS, should not be an income tax payer, and should have a savings bank account and Aadhaar. Workers already registered on the e-Shram portal can link their PM-SYM enrolment.",
+    "benefits": "Minimum assured pension of ₹3,000 per month after attaining age 60. If the subscriber dies after pension commencement, the spouse receives 50% of the pension as a family pension. The contribution is matched equally by the Central Government: for example, a worker joining at age 29 contributes ₹100 per month and the government contributes an equal ₹100 per month into the Pension Fund.",
+    "documents": [
+      "Aadhaar card",
+      "Savings bank account passbook (with IFSC code)",
+      "Mobile number (for OTP verification at CSC)"
+    ],
+    "steps": [
+      "Visit the nearest Common Service Centre (CSC) with your Aadhaar card and savings bank passbook",
+      "The CSC operator will complete the enrolment on the PM-SYM portal (maandhan.in)",
+      "Choose the monthly contribution amount based on your age of entry",
+      "Auto-debit of monthly contribution from your savings account is set up",
+      "Contributions are made monthly until age 60",
+      "On turning 60, apply for pension through the LIC branch linked to your account; pension is credited monthly to your bank account"
+    ],
+    "official": "https://maandhan.in/",
+    "source": "Ministry of Labour and Employment / LIC of India / PM-SYM Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 27,
+    "name": "e-Shram — National Database of Unorganised Workers",
+    "category": "Pension & Social Security",
+    "audience": "Unorganised Sector Workers",
+    "summary": "A Ministry of Labour and Employment portal to register unorganised workers and create a National Database of Unorganised Workers (NDUW). Registration provides workers with a Universal Account Number (UAN) card (e-Shram card) that serves as a portable identity and enables convergence of social security benefits.",
+    "eligibility": "Any unorganised worker (home-based worker, self-employed, or wage worker in the unorganised sector, including workers in the organised sector not covered by ESIC or EPFO) aged 16 to 59 years. The worker should not be an income tax payer and should not be a member of ESIC or EPFO. An Aadhaar number and an Aadhaar-linked active mobile number are required.",
+    "benefits": "A 12-digit Universal Account Number (UAN) and an e-Shram card that serves as a lifelong portable identity for the worker. Facilitates seamless delivery of social security and welfare benefits from central and state governments. Registered workers may be included in priority beneficiary lists for various schemes (PMSBY accident insurance, livelihood support, etc.) subject to current government notifications.",
+    "documents": [
+      "Aadhaar number",
+      "Aadhaar-linked and active mobile number (for OTP verification)",
+      "Bank account number and IFSC code",
+      "Occupation and address details (self-declared)"
+    ],
+    "steps": [
+      "Visit eshram.gov.in or the Umang app, or go to the nearest CSC",
+      "Click 'Register on e-Shram' and enter your Aadhaar-linked mobile number",
+      "Verify with the OTP sent to your Aadhaar-linked mobile",
+      "Fill in personal, occupation, and bank account details",
+      "Submit the form — a 12-digit UAN is generated immediately",
+      "Download or collect your e-Shram card for use as a portable identity document"
+    ],
+    "official": "https://eshram.gov.in/",
+    "source": "Ministry of Labour and Employment, Government of India / e-Shram Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 28,
+    "name": "MeriPehchaan — National Single Sign-On",
+    "category": "Digital Services",
+    "audience": "Citizens Using Government Online Services",
+    "summary": "A Digital India initiative by the Ministry of Electronics and Information Technology (MeitY) that provides a single set of login credentials for citizens to access multiple government online portals and services — eliminating the need to create separate usernames and passwords for each government application.",
+    "eligibility": "Any citizen of India who uses government online services can register for a MeriPehchaan account. There is no age, income, or category restriction. A valid mobile number and email address are required for registration.",
+    "benefits": "One login for multiple government services and portals that have adopted MeriPehchaan (NSSO). Reduces the hassle of managing multiple credentials. Secure and centralised authentication for government applications. Supports the Digital India vision of seamless citizen-government interaction.",
+    "documents": [
+      "Valid mobile number",
+      "Valid email address",
+      "Aadhaar number (optional, for stronger verification on some services)"
+    ],
+    "steps": [
+      "Visit meripehchaan.gov.in",
+      "Click 'Register' and enter your mobile number, email address, and basic details",
+      "Verify your mobile number with the OTP sent",
+      "Set a password to complete account creation",
+      "Use your MeriPehchaan credentials to log in to any participating government portal that displays the MeriPehchaan sign-in option",
+      "Manage your account and linked services from the MeriPehchaan dashboard"
+    ],
+    "official": "https://meripehchaan.gov.in/",
+    "source": "Ministry of Electronics and Information Technology (MeitY), Government of India / MeriPehchaan Portal",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 29,
+    "name": "Sanchar Saathi",
+    "category": "Digital Services",
+    "audience": "Mobile Phone Users",
+    "summary": "A Department of Telecommunications (DoT) citizen-centric portal and mobile app that empowers mobile phone users to check SIM connections registered in their name, report and block lost or stolen mobile phones, and verify the genuineness of mobile handsets before purchase.",
+    "eligibility": "Any person holding a valid Indian mobile number can use the Sanchar Saathi portal or app. No registration, income criteria, or special eligibility is required for most services — just a mobile number for OTP verification.",
+    "benefits": "Check the number of mobile connections registered in your name (TAFCOP) and request disconnection of connections you did not take or no longer need. Block a lost or stolen mobile phone using IMEI to prevent misuse (CEIR service). Trace the status of a blocked mobile phone. Verify whether a second-hand or new mobile handset is genuine and not blacklisted or duplicated before purchase. All services are free of charge.",
+    "documents": [
+      "Valid Indian mobile number (for OTP-based verification)",
+      "FIR / police complaint number (required when reporting a lost or stolen phone)",
+      "IMEI number of the lost or stolen handset (printed on the device packaging or checked by dialling *#06#)"
+    ],
+    "steps": [
+      "Visit sancharsaathi.gov.in or download the Sanchar Saathi mobile app",
+      "To check your SIM connections: go to TAFCOP, enter your mobile number, verify with OTP, and view all connections in your name",
+      "To request disconnection of an unrecognised number: select it in TAFCOP and raise a disconnection request",
+      "To block a lost/stolen phone: go to CEIR, file an FIR first at the nearest police station, then submit the FIR number and IMEI on the portal",
+      "To check handset genuineness: use the 'Know Your Mobile' feature and enter the device's IMEI number",
+      "Track the status of your blocking request through the CEIR section of the portal"
+    ],
+    "official": "https://sancharsaathi.gov.in/",
+    "source": "Department of Telecommunications (DoT), Ministry of Communications, Government of India",
+    "verified": "2026-10-02"
+  },
+  {
+    "id": 30,
+    "name": "Bhashini — National Language Translation Mission",
+    "category": "Digital Services",
+    "audience": "Citizens, Developers & Government Agencies",
+    "summary": "A MeitY initiative under the Digital India Corporation that builds a National Public Digital Platform for AI-powered language technology across India's languages. Bhashini enables citizens to access digital services, government information, and content in their own language — through text, speech, and translation — breaking language barriers and promoting digital inclusion.",
+    "eligibility": "Bhashini's services are available to all citizens regardless of language, education, or location. The Bhashini app and web platform are freely accessible. Developers and organisations can access APIs to integrate language services into their own applications. No income or category restriction applies.",
+    "benefits": "Speech-to-text (voice input), text-to-speech (voice output), and translation in 22 Indian languages and English. Ability to read, listen to, and interact with government services and digital content in your preferred Indian language. Powers translations on 500+ government websites. Supports accessibility for non-English speakers and those with limited literacy. Free access through the Bhashini app (bhashini.ai) and web platform.",
+    "documents": [
+      "No documents are required to use the Bhashini app or web platform",
+      "Developers/organisations integrating APIs should register on the Bhashini developer portal at bhashini.gov.in"
+    ],
+    "steps": [
+      "Download the Bhashini app from bhashini.ai, or visit bhashini.gov.in",
+      "Select your preferred language from the supported Indian languages",
+      "Use voice input (speech-to-text) to speak in your language and get text output",
+      "Use the translation feature to convert text or speech between supported Indian languages and English",
+      "Use text-to-speech to listen to content in your language",
+      "Developers and government agencies can register at bhashini.gov.in to integrate language AI APIs into their services"
+    ],
+    "official": "https://bhashini.gov.in/",
+    "source": "Digital India BHASHINI Division (DIBD) / Digital India Corporation / MeitY, Government of India",
+    "verified": "2026-10-02"
   }
 ]

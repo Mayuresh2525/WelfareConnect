@@ -406,12 +406,6 @@ async function loadSchemes() {
         );
 
 
-    const audienceElement =
-        document.getElementById(
-            "audience"
-        );
-
-
     const resultsElement =
         document.getElementById(
             "results"
@@ -421,7 +415,6 @@ async function loadSchemes() {
     if (
         !searchElement ||
         !categoryElement ||
-        !audienceElement ||
         !resultsElement
     ) {
 
@@ -438,15 +431,10 @@ async function loadSchemes() {
         categoryElement.value;
 
 
-    const audience =
-        audienceElement.value;
-
-
     const filterSignature =
         JSON.stringify({
             q,
-            category,
-            audience
+            category
         });
 
 
@@ -472,18 +460,14 @@ async function loadSchemes() {
         }
 
 
-        if (
-            category ||
-            audience
-        ) {
+        if (category) {
 
             trackActivity(
                 "filter",
                 {
                     details:
                         JSON.stringify({
-                            category,
-                            audience
+                            category
                         })
                 }
             );
@@ -497,7 +481,7 @@ async function loadSchemes() {
 
         const response =
             await fetch(
-                `/api/schemes?q=${encodeURIComponent(q)}&category=${encodeURIComponent(category)}&audience=${encodeURIComponent(audience)}`
+                `/api/schemes?q=${encodeURIComponent(q)}&category=${encodeURIComponent(category)}`
             );
 
 
@@ -2283,14 +2267,22 @@ function renderWizard() {
 
 function selectWizard(audience) {
 
-    const audienceElement =
-        document.getElementById("audience");
+    const searchElement =
+        document.getElementById("search");
 
-    if (!audienceElement) {
-        return;
+    // Map audience labels to useful keyword searches
+    const keywordMap = {
+        "Students":         "student",
+        "Youth":            "youth",
+        "Eligible Families":"family",
+        "Street Vendors":   "vendor",
+        "Citizens":         "citizen"
+    };
+
+    if (searchElement) {
+        searchElement.value =
+            keywordMap[audience] || audience.toLowerCase();
     }
-
-    audienceElement.value = audience;
 
     closeSchemeWizard();
 
@@ -2549,3 +2541,300 @@ loadSchemes();
 updateStats();
 
 initializeRevealAnimation();
+
+
+// ============================================================
+// WELFARECONNECT ASSISTANT — CHATBOT
+// ============================================================
+
+(function () {
+
+    // ----------------------------------------------------------
+    // STATE
+    // ----------------------------------------------------------
+
+    let chatOpen = false;
+    let chatBusy = false;
+    let chatGreeted = false;
+
+    // ----------------------------------------------------------
+    // TOGGLE PANEL
+    // ----------------------------------------------------------
+
+    window.toggleChat = function () {
+        chatOpen = !chatOpen;
+        const panel  = document.getElementById("chatPanel");
+        const fabIcon = document.getElementById("chatFabIcon");
+
+        if (chatOpen) {
+            panel.classList.remove("hidden");
+            if (fabIcon) fabIcon.textContent = "✕";
+            document.getElementById("chatInput").focus();
+            // Show welcome message on first open
+            if (!chatGreeted) {
+                chatGreeted = true;
+                _showWelcome();
+            }
+        } else {
+            panel.classList.add("hidden");
+            if (fabIcon) fabIcon.textContent = "💬";
+        }
+    };
+
+    // ----------------------------------------------------------
+    // WELCOME MESSAGE (shown once on first open)
+    // ----------------------------------------------------------
+
+    function _showWelcome() {
+        _appendBotMessage(
+            "👋 Hi! I'm the **WelfareConnect Assistant**.\n\n" +
+            "I can help you discover and understand government welfare schemes " +
+            "from the WelfareConnect database.\n\n" +
+            "Try asking me:\n" +
+            "• \"I'm a student looking for financial help\"\n" +
+            "• \"What documents do I need for PM-KISAN?\"\n" +
+            "• \"Tell me about PM Vishwakarma\"\n" +
+            "• \"Show pension schemes\"\n\n" +
+            "Or tap a quick-action button below.",
+            []
+        );
+    }
+
+    // ----------------------------------------------------------
+    // SEND MESSAGE (called by button, Enter key, and chips)
+    // ----------------------------------------------------------
+
+    window.sendChatMessage = function (prefill) {
+        const input = document.getElementById("chatInput");
+        const text  = (prefill || input.value).trim();
+        if (!text || chatBusy) return;
+
+        input.value = "";
+        _hideChips();
+        _appendUserMessage(text);
+        _showTyping();
+
+        chatBusy = true;
+
+        fetch("/api/chat", {
+            method:  "POST",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify({ message: text })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            _removeTyping();
+            chatBusy = false;
+            _renderBotResponse(data);
+        })
+        .catch(function () {
+            _removeTyping();
+            chatBusy = false;
+            _appendBotMessage(
+                "Sorry, I couldn't connect right now. Please try again in a moment.",
+                []
+            );
+        });
+    };
+
+    // ----------------------------------------------------------
+    // RENDER BOT RESPONSE
+    // ----------------------------------------------------------
+
+    function _renderBotResponse(data) {
+        const text    = data.text    || "";
+        const schemes = data.schemes || [];
+        const intent  = data.intent  || "general";
+        const type    = data.type    || "general";
+
+        _appendBotMessage(text, schemes, intent, type);
+    }
+
+    // ----------------------------------------------------------
+    // APPEND USER MESSAGE
+    // ----------------------------------------------------------
+
+    function _appendUserMessage(text) {
+        const box = document.getElementById("chatMessages");
+        const msg = document.createElement("div");
+        msg.className = "chat-msg user";
+        msg.innerHTML = '<div class="chat-bubble">' + _esc(text) + '</div>';
+        box.appendChild(msg);
+        _scrollBottom(box);
+    }
+
+    // ----------------------------------------------------------
+    // APPEND BOT MESSAGE (with optional scheme cards)
+    // ----------------------------------------------------------
+
+    function _appendBotMessage(text, schemes, intent, type) {
+        const box = document.getElementById("chatMessages");
+        const wrap = document.createElement("div");
+        wrap.className = "chat-msg bot";
+
+        // Text bubble
+        const bubble = document.createElement("div");
+        bubble.className = "chat-bubble";
+        bubble.innerHTML = _formatText(text);
+        wrap.appendChild(bubble);
+
+        // Scheme cards
+        if (schemes && schemes.length > 0) {
+            schemes.forEach(function (s) {
+                wrap.appendChild(_buildSchemeCard(s, intent));
+            });
+        }
+
+        box.appendChild(wrap);
+        _scrollBottom(box);
+    }
+
+    // ----------------------------------------------------------
+    // BUILD SCHEME CARD
+    // ----------------------------------------------------------
+
+    function _buildSchemeCard(s, intent) {
+        const card = document.createElement("div");
+        card.className = "chat-scheme-card";
+
+        // Tag + name
+        card.innerHTML =
+            '<div class="chat-scheme-tag">' + _esc(s.category) + '</div>' +
+            '<div class="chat-scheme-name">' + _esc(s.name) + '</div>';
+
+        // Intent-specific detail section
+        const detailDiv = document.createElement("div");
+        detailDiv.className = "chat-scheme-text";
+
+        if (intent === "documents" && s.documents && s.documents.length) {
+            detailDiv.innerHTML =
+                "<b>Documents required:</b>" +
+                "<ul>" +
+                s.documents.map(function (d) {
+                    return "<li>" + _esc(d) + "</li>";
+                }).join("") +
+                "</ul>";
+
+        } else if (intent === "eligibility" && s.eligibility) {
+            detailDiv.innerHTML = "<b>Eligibility:</b> " + _esc(s.eligibility);
+
+        } else if (intent === "benefits" && s.benefits) {
+            detailDiv.innerHTML = "<b>Benefits:</b> " + _esc(s.benefits);
+
+        } else if (intent === "apply" && s.steps && s.steps.length) {
+            detailDiv.innerHTML =
+                "<b>How to apply:</b>" +
+                "<ul>" +
+                s.steps.map(function (step) {
+                    return "<li>" + _esc(step) + "</li>";
+                }).join("") +
+                "</ul>";
+
+        } else {
+            // General: show summary
+            detailDiv.innerHTML = _esc(s.summary || "");
+        }
+
+        card.appendChild(detailDiv);
+
+        // Action buttons
+        const actions = document.createElement("div");
+        actions.className = "chat-scheme-actions";
+
+        // View Full Scheme — calls existing openScheme()
+        const viewBtn = document.createElement("button");
+        viewBtn.className = "chat-scheme-btn primary";
+        viewBtn.textContent = "View Full Guide →";
+        viewBtn.onclick = function () {
+            openScheme(s.id);
+        };
+        actions.appendChild(viewBtn);
+
+        // Official portal link
+        if (s.official) {
+            const linkBtn = document.createElement("a");
+            linkBtn.className = "chat-scheme-btn secondary";
+            linkBtn.textContent = "Official Portal ↗";
+            linkBtn.href   = s.official;
+            linkBtn.target = "_blank";
+            linkBtn.rel    = "noopener";
+            linkBtn.onclick = function () {
+                if (typeof trackActivity === "function") {
+                    trackActivity("official_link_click", { scheme_id: Number(s.id) });
+                }
+            };
+            actions.appendChild(linkBtn);
+        }
+
+        card.appendChild(actions);
+        return card;
+    }
+
+    // ----------------------------------------------------------
+    // TYPING INDICATOR
+    // ----------------------------------------------------------
+
+    function _showTyping() {
+        const box = document.getElementById("chatMessages");
+        const el = document.createElement("div");
+        el.id = "chatTypingIndicator";
+        el.className = "chat-msg bot";
+        el.innerHTML =
+            '<div class="chat-typing">' +
+            '<span></span><span></span><span></span>' +
+            '</div>';
+        box.appendChild(el);
+        _scrollBottom(box);
+    }
+
+    function _removeTyping() {
+        const el = document.getElementById("chatTypingIndicator");
+        if (el) el.remove();
+    }
+
+    // ----------------------------------------------------------
+    // HIDE CHIPS AFTER FIRST MESSAGE
+    // ----------------------------------------------------------
+
+    function _hideChips() {
+        const chips = document.getElementById("chatChips");
+        if (chips) chips.style.display = "none";
+    }
+
+    // ----------------------------------------------------------
+    // SCROLL MESSAGES TO BOTTOM
+    // ----------------------------------------------------------
+
+    function _scrollBottom(box) {
+        requestAnimationFrame(function () {
+            box.scrollTop = box.scrollHeight;
+        });
+    }
+
+    // ----------------------------------------------------------
+    // TEXT FORMATTING HELPERS
+    // ----------------------------------------------------------
+
+    // Escape HTML entities
+    function _esc(str) {
+        if (!str) return "";
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    }
+
+    // Render **bold**, newlines, and bullet lines
+    function _formatText(text) {
+        if (!text) return "";
+        return _esc(text)
+            // **bold**
+            .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+            // bullet lines starting with • (already escaped as &#x2022 or literal)
+            .replace(/^• (.+)$/gm, "<span style='display:block;padding-left:10px;'>• $1</span>")
+            // newlines to <br>
+            .replace(/\n/g, "<br>");
+    }
+
+})();
