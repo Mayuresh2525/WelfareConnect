@@ -604,7 +604,7 @@ def _detect_category(tokens):
 def _build_response(message):
     """
     Returns a dict:
-      type: "scheme_detail" | "scheme_list" | "not_found" | "greeting"
+      type: "scheme_detail" | "scheme_list" | "not_found" | "greeting" | "general"
       text: str
       schemes: list of scheme dicts (slim, safe for JSON)
       intent: str
@@ -612,31 +612,429 @@ def _build_response(message):
     raw = message.strip()
     q_lower = raw.lower()
     tokens = [t.strip("?!.,;:'\"()") for t in q_lower.split() if len(t.strip("?!.,;:'\"()")) > 1]
+    token_set = set(tokens)
+
+    # Helper: text-only response with no scheme cards
+    def _plain(text, intent="general"):
+        return {"type": "general", "text": text, "schemes": [], "intent": intent}
+
+    # Derive unique categories from the loaded data (used in several handlers)
+    _all_categories = sorted({s["category"] for s in SCHEMES})
+    _cat_list_str   = "\n".join(f"• {c}" for c in _all_categories)
 
     # ------------------------------------------------------------------
-    # Greeting / opener
+    # 1. Greeting
     # ------------------------------------------------------------------
-    greet_words = {"hi", "hello", "hey", "namaste", "hii", "helo", "help"}
-    if set(tokens) & greet_words and len(tokens) <= 4:
+    greet_words = {"hi", "hello", "hey", "namaste", "hii", "helo",
+                   "morning", "afternoon", "evening", "greetings"}
+    if token_set & greet_words and len(tokens) <= 5:
         return {
             "type": "greeting",
             "text": (
-                "Hello! I'm the WelfareConnect Assistant. "
-                "I can help you discover and understand government welfare schemes "
-                "available in our database.\n\n"
-                "You can ask me things like:\n"
-                "• \"I'm a student looking for financial help\"\n"
-                "• \"What documents do I need for PM-KISAN?\"\n"
-                "• \"Tell me about PM Vishwakarma\"\n"
-                "• \"Show pension schemes\"\n\n"
-                "What would you like to know?"
+                "Hello! I'm the WelfareConnect Assistant.\n\n"
+                "I can help you:\n"
+                "• Discover government welfare schemes\n"
+                "• Understand eligibility, benefits and documents\n"
+                "• Navigate the WelfareConnect website\n"
+                "• Find the right official portal to apply\n\n"
+                "Try asking: \"Show education schemes\", \"What documents do I need for PM-KISAN?\", "
+                "or \"I want to start a business — what can I explore?\""
             ),
             "schemes": [],
             "intent": "greeting"
         }
 
     # ------------------------------------------------------------------
-    # Run search
+    # 2. Small talk — thank you / bye / okay / good
+    # ------------------------------------------------------------------
+    thanks_words = {"thank", "thanks", "thankyou", "thank-you", "ty"}
+    bye_words    = {"bye", "goodbye", "see", "later", "cya", "farewell"}
+    ack_words    = {"okay", "ok", "alright", "got", "noted", "great",
+                    "cool", "nice", "good", "perfect", "understood"}
+
+    if token_set & thanks_words and len(tokens) <= 5:
+        return _plain(
+            "You're welcome! If you have more questions about welfare schemes or the website, "
+            "feel free to ask anytime.",
+            "greeting"
+        )
+    if token_set & bye_words and len(tokens) <= 4:
+        return _plain(
+            "Goodbye! Visit WelfareConnect anytime to explore government welfare schemes. "
+            "Good luck with your applications!",
+            "greeting"
+        )
+    if token_set & ack_words and len(tokens) <= 3:
+        return _plain(
+            "Great! Let me know if you have any more questions about schemes or the website.",
+            "greeting"
+        )
+
+    # ------------------------------------------------------------------
+    # 3. What can you do / help / capabilities
+    # ------------------------------------------------------------------
+    capability_signals = {
+        ("what", "can", "you"), ("what", "do", "you"), ("how", "can", "you"),
+        ("your", "features"), ("what", "you", "do"),
+    }
+    is_capability = (
+        "capabilities" in token_set or "capability" in token_set or
+        ("help" in token_set and len(tokens) <= 3) or
+        any(all(w in token_set for w in ph) for ph in capability_signals)
+    )
+    if is_capability:
+        return _plain(
+            "Here's what I can help you with:\n\n"
+            "**Scheme discovery** — Ask about any scheme by name "
+            "(e.g. \"Tell me about PM-KISAN\", \"What is MGNREGA?\").\n\n"
+            "**Category browsing** — Ask for schemes by category "
+            "(e.g. \"Show education schemes\", \"Pension schemes\").\n\n"
+            "**Eligibility & benefits** — Ask what a scheme offers or who can apply "
+            "(e.g. \"Who is eligible for Atal Pension Yojana?\").\n\n"
+            "**Documents & application** — Ask what documents you need or how to apply "
+            "(e.g. \"What documents do I need?\", \"How do I apply for PM Vishwakarma?\").\n\n"
+            "**Navigation help** — Ask how to use any section of the WelfareConnect website.\n\n"
+            "**Profile-based guidance** — Tell me about yourself and I'll point you in the right "
+            "direction (e.g. \"I'm a student\", \"I want to start a business\").\n\n"
+            "I only use information from the WelfareConnect database and website. "
+            "For the actual application, I'll always direct you to the official government portal."
+        )
+
+    # ------------------------------------------------------------------
+    # 4. About WelfareConnect
+    # ------------------------------------------------------------------
+    about_signals = {
+        ("what", "is", "welfareconnect"), ("what", "is", "welfare", "connect"),
+        ("about", "this", "website"), ("about", "this", "site"),
+        ("what", "does", "this", "do"), ("what", "does", "this", "website"),
+        ("what", "this", "website"), ("purpose", "website"),
+        ("what", "is", "this", "website"), ("what", "is", "this", "site"),
+        ("how", "can", "website", "help"), ("how", "can", "this", "help"),
+        ("what", "can", "do", "here"), ("what", "can", "here"),
+        ("about", "welfareconnect"),
+    }
+    about_words   = {"about", "purpose", "explain", "describe", "overview"}
+    website_words = {"welfareconnect", "website", "site", "platform", "portal"}
+    is_about = (
+        any(all(w in token_set for w in ph) for ph in about_signals) or
+        (website_words & token_set and about_words & token_set and len(tokens) <= 8)
+    )
+    if is_about:
+        return _plain(
+            "**WelfareConnect** is a digital welfare guide — an educational project that helps "
+            "Indian citizens discover, understand, and prepare to apply for government welfare schemes.\n\n"
+            "**What the website offers:**\n\n"
+            "• **Find Schemes** — Search and filter government schemes by category or keyword. "
+            "Each card shows a summary, eligibility guide, document checklist, and a link to the "
+            "official portal.\n\n"
+            "• **How It Works** — A simple four-step journey: Find → Understand → Prepare → Apply.\n\n"
+            "• **Awareness Quiz** — Test your knowledge of welfare schemes in five quick questions.\n\n"
+            "• **Awareness Survey** — A short assessment on welfare scheme awareness "
+            "(responses feed the public dashboard).\n\n"
+            "• **Dashboard** — Anonymous aggregate survey results and statistics.\n\n"
+            "• **This Assistant** — Answers questions about schemes and how to use the website.\n\n"
+            "WelfareConnect is an informational guide only. Actual applications must be completed "
+            "through the official government portals linked inside each scheme."
+        )
+
+    # ------------------------------------------------------------------
+    # 5. Website navigation / how to find / how to use
+    # ------------------------------------------------------------------
+    nav_signals = {
+        ("find", "scheme"), ("find", "schemes"), ("search", "scheme"),
+        ("search", "schemes"), ("how", "find"), ("where", "find"),
+        ("how", "search"), ("how", "use"), ("navigate", "website"),
+        ("view", "scheme"), ("view", "details"), ("full", "scheme"),
+        ("how", "works"), ("finder", "work"), ("where", "search"),
+        ("how", "navigate"), ("where", "schemes"),
+    }
+    nav_words  = {"navigate", "navigation", "section", "finder", "filter",
+                  "browse", "search", "find", "look"}
+    site_ref   = {"website", "site", "page", "section", "here", "welfareconnect", "it"}
+    is_nav = (
+        any(all(w in token_set for w in ph) for ph in nav_signals) or
+        (nav_words & token_set and site_ref & token_set and len(tokens) <= 9
+         and not token_set & {"scheme", "schemes"})   # pure nav question, not category search
+    )
+    if is_nav:
+        return _plain(
+            "Here's how to use the WelfareConnect website:\n\n"
+            "**Finding a scheme**\n"
+            "Click **\"Find Schemes\"** in the top navigation. "
+            "Filter by **Category** (Education, Business, Pension, etc.) or type a keyword "
+            "(e.g. \"student\", \"pension\", \"loan\"). Scheme cards appear instantly.\n\n"
+            "**Viewing full scheme details**\n"
+            "Click **\"View Full Guide →\"** on any card to see the full description, "
+            "eligibility guide, benefits, document checklist, and step-by-step application guide.\n\n"
+            "**Document checklist**\n"
+            "Inside the full guide, tick off documents as you prepare them — "
+            "the progress bar updates automatically.\n\n"
+            "**Applying**\n"
+            "Click **\"Open Official Portal ↗\"** to go directly to the government website "
+            "for that scheme. The actual application is completed there.\n\n"
+            "**Scheme Finder Wizard**\n"
+            "Click **\"✨ Find My Schemes\"** to filter schemes by your profile "
+            "(student, youth, family, vendor, etc.).\n\n"
+            "You can also ask me: \"Show education schemes\" or \"Tell me about PM-KISAN\"."
+        )
+
+    # ------------------------------------------------------------------
+    # 6. What categories are available
+    # ------------------------------------------------------------------
+    cat_q_signals = {
+        ("what", "categories"), ("which", "categories"), ("list", "categories"),
+        ("show", "categories"), ("available", "categories"),
+        ("what", "types"), ("which", "types"), ("what", "kinds"),
+        ("what", "category"), ("which", "category"),
+    }
+    is_cat_query = (
+        any(all(w in token_set for w in ph) for ph in cat_q_signals) or
+        ("categories" in token_set and len(tokens) <= 5) or
+        ("category" in token_set
+         and token_set & {"what", "which", "list", "show", "available"}
+         and len(tokens) <= 6)
+    )
+    if is_cat_query:
+        return _plain(
+            f"WelfareConnect covers **{len(SCHEMES)} schemes** across "
+            f"**{len(_all_categories)} categories**:\n\n"
+            f"{_cat_list_str}\n\n"
+            "Filter by category in the **Find Schemes** section, or ask me directly — "
+            "for example: \"Show business schemes\" or \"Education schemes\"."
+        )
+
+    # ------------------------------------------------------------------
+    # 7. General documents question (not scheme-specific)
+    # ------------------------------------------------------------------
+    doc_general_words = {"documents", "document", "docs", "papers",
+                         "paperwork", "certificates", "certificate", "proof"}
+    doc_q_words = {"what", "which", "need", "required", "require",
+                   "bring", "prepare", "generally", "common", "typically", "might"}
+    # Only fire if the query is short and doesn't name a specific scheme
+    is_doc_general = (
+        doc_general_words & token_set and
+        doc_q_words & token_set and
+        len(tokens) <= 9 and
+        not any(s["name"].lower().split()[0] in q_lower for s in SCHEMES)
+    )
+    if is_doc_general:
+        return _plain(
+            "Most government welfare scheme applications require some or all of the following. "
+            "The exact list varies by scheme — always check the official portal for current requirements:\n\n"
+            "• **Identity proof** — Aadhaar card (most common), Voter ID, or Passport\n"
+            "• **Address proof** — Aadhaar, utility bill, or ration card\n"
+            "• **Income certificate** — issued by a competent state authority\n"
+            "• **Caste / category certificate** — SC, ST, or OBC as applicable\n"
+            "• **Bank account details** — account number and IFSC code (for DBT transfers)\n"
+            "• **Academic documents** — mark sheets, certificates (for education schemes)\n"
+            "• **Age proof** — birth certificate or Class X/XII certificate\n"
+            "• **Photograph** — passport-size\n\n"
+            "Each scheme on WelfareConnect has its own **Document Checklist** — click "
+            "**\"View Full Guide →\"** on any scheme card for the specific list.\n\n"
+            "You can also ask: \"What documents do I need for PM-KISAN?\" for a scheme-specific answer."
+        )
+
+    # ------------------------------------------------------------------
+    # 8. How to apply — general (not naming a specific scheme)
+    # ------------------------------------------------------------------
+    apply_signals = {
+        ("how", "apply"), ("how", "do", "apply"), ("how", "can", "apply"),
+        ("how", "to", "apply"), ("application", "process"),
+        ("applying", "scheme"), ("how", "register"), ("how", "enroll"),
+    }
+    is_apply_general = (
+        any(all(w in token_set for w in ph) for ph in apply_signals) and
+        len(tokens) <= 7 and
+        not any(s["name"].lower().split()[0] in q_lower for s in SCHEMES)
+    )
+    if is_apply_general:
+        return _plain(
+            "Here's the general application process for government welfare schemes:\n\n"
+            "**1. Find the right scheme**\n"
+            "Use the **Find Schemes** section on WelfareConnect — search by keyword or category.\n\n"
+            "**2. Check official eligibility**\n"
+            "WelfareConnect provides a guide only. Visit the scheme's **Official Portal** to "
+            "confirm current eligibility rules — criteria can change.\n\n"
+            "**3. Prepare your documents**\n"
+            "Gather the items listed in the scheme's document checklist — typically Aadhaar, "
+            "income certificate, bank details, and any category certificates.\n\n"
+            "**4. Apply on the official portal**\n"
+            "Click **\"Open Official Portal ↗\"** in the scheme guide. Most central government "
+            "schemes accept online applications; some require visiting a bank, local office, "
+            "or Common Service Centre (CSC).\n\n"
+            "**5. Track your application**\n"
+            "Most portals provide tracking via your application or registration number.\n\n"
+            "Ask me about a specific scheme for detailed steps — e.g. "
+            "\"How do I apply for PM Vishwakarma?\"."
+        )
+
+    # ------------------------------------------------------------------
+    # 9. Where to start / getting started
+    # ------------------------------------------------------------------
+    start_signals = {
+        ("where", "start"), ("how", "start"), ("where", "begin"),
+        ("how", "begin"), ("getting", "started"), ("get", "started"),
+        ("first", "step"), ("what", "first"),
+    }
+    is_start = any(all(w in token_set for w in ph) for ph in start_signals) and len(tokens) <= 8
+    if is_start:
+        return _plain(
+            "Here's a good way to get started:\n\n"
+            "**Step 1 — Browse or search**\n"
+            "Go to **Find Schemes** (top navigation). Choose a category or type a keyword "
+            "like \"student\", \"farmer\", \"pension\", or \"business\".\n\n"
+            "**Step 2 — Read the scheme guide**\n"
+            "Click **\"View Full Guide →\"** on any card to read the eligibility overview, "
+            "benefits, and application steps.\n\n"
+            "**Step 3 — Prepare documents**\n"
+            "Use the interactive checklist to track which documents you have ready.\n\n"
+            "**Step 4 — Apply officially**\n"
+            "Click **\"Open Official Portal ↗\"** — the actual application is submitted on "
+            "the government website.\n\n"
+            "You can also tell me about yourself and I'll suggest where to look — "
+            "for example: \"I'm a student\" or \"I want to start a business\"."
+        )
+
+    # ------------------------------------------------------------------
+    # 10. Profile-based guidance: student
+    # ------------------------------------------------------------------
+    student_profile = {"student", "students", "studying", "study",
+                       "college", "university", "school", "scholarship",
+                       "degree", "diploma", "undergraduate", "postgraduate"}
+    profile_verbs   = {"am", "im", "i'm", "looking", "want", "need",
+                       "suggest", "recommend", "what", "explore", "help"}
+    is_student_profile = (
+        student_profile & token_set and
+        (profile_verbs & token_set or len(tokens) <= 4) and
+        # Don't fire if they're asking about a specific named scheme
+        not any(w in q_lower for w in ["eligib", "benefit", "document", "apply",
+                                        "pm-kisan", "mgnrega", "nats", "naps"])
+    )
+    if is_student_profile:
+        edu_schemes = [s for s in SCHEMES if s["category"] == "Education"][:4]
+        return {
+            "type":    "scheme_list",
+            "text": (
+                "For students, WelfareConnect covers several **Education** category schemes "
+                "including scholarships, free online courses, and skill training opportunities. "
+                "Here are some to explore — check each scheme's official eligibility criteria "
+                "to see which ones apply to your situation:"
+            ),
+            "schemes": edu_schemes,
+            "intent":  "general"
+        }
+
+    # ------------------------------------------------------------------
+    # 11. Profile-based guidance: business / entrepreneur
+    # ------------------------------------------------------------------
+    biz_profile = {"business", "entrepreneur", "enterprise", "startup",
+                   "shop", "vendor", "self-employed", "artisan", "msme",
+                   "livelihood", "manufacturing", "trade", "food"}
+    is_biz_profile = (
+        biz_profile & token_set and
+        profile_verbs & token_set and
+        not any(w in q_lower for w in ["eligib", "benefit", "document", "apply",
+                                        "pmegp", "svanidhi", "stand-up", "pmfme"])
+    )
+    if is_biz_profile:
+        biz_schemes = [s for s in SCHEMES if s["category"] == "Business & Livelihood"][:4]
+        return {
+            "type":    "scheme_list",
+            "text": (
+                "For business and livelihood, WelfareConnect covers schemes that support "
+                "entrepreneurs, micro-enterprises, street vendors, food processors, and artisans. "
+                "Here are some relevant schemes — verify eligibility on the official portals before applying:"
+            ),
+            "schemes": biz_schemes,
+            "intent":  "general"
+        }
+
+    # ------------------------------------------------------------------
+    # 12. Profile-based guidance: employment / skills / job seeker
+    # ------------------------------------------------------------------
+    empl_profile = {"job", "jobs", "employment", "unemployed", "work", "career",
+                    "skill", "skills", "training", "apprentice", "apprenticeship",
+                    "rural", "unskilled"}
+    is_empl_profile = (
+        empl_profile & token_set and
+        profile_verbs & token_set and
+        not any(w in q_lower for w in ["eligib", "benefit", "document", "apply",
+                                        "mgnrega", "ddu", "rseti", "nats", "naps", "ncs"])
+    )
+    if is_empl_profile:
+        empl_schemes = [s for s in SCHEMES
+                        if s["category"] in ("Skills & Employment", "Employment & Livelihood")][:4]
+        return {
+            "type":    "scheme_list",
+            "text": (
+                "For employment and skills, WelfareConnect has schemes covering skill training, "
+                "apprenticeships, job portals, and rural employment programmes. "
+                "Here are some to explore — check the official eligibility criteria for each:"
+            ),
+            "schemes": empl_schemes,
+            "intent":  "general"
+        }
+
+    # ------------------------------------------------------------------
+    # 13. Off-topic guard — runs before scheme search so clearly
+    #     unrelated questions never leak into scheme results
+    # ------------------------------------------------------------------
+    _off_topic_words = {
+        "weather", "cricket", "football", "basketball", "tennis", "sport",
+        "sports", "movie", "movies", "film", "films", "recipe", "cook",
+        "cooking", "news", "stock", "stocks", "crypto", "bitcoin", "share",
+        "market", "astrology", "horoscope", "joke", "jokes", "game", "games",
+        "travel", "hotel", "flight", "restaurant", "dating", "relationship",
+        "celebrity", "song", "music", "maths", "math", "science", "history",
+        "geography", "biology", "physics", "chemistry",
+    }
+    if token_set & _off_topic_words:
+        return _plain(
+            "I'm the WelfareConnect Assistant — I'm focused on government welfare schemes "
+            "and how to use the WelfareConnect website.\n\n"
+            "I'm not able to help with that topic, but I'm happy to help you:\n"
+            "• Discover schemes (e.g. \"Show education schemes\")\n"
+            "• Understand a specific scheme (e.g. \"Tell me about PM-KISAN\")\n"
+            "• Find documents or application steps\n"
+            "• Navigate the WelfareConnect website\n\n"
+            "What would you like to know about welfare schemes?",
+            "not_found"
+        )
+
+    # ------------------------------------------------------------------
+    # 14. Welfare-adjacent topics not in the current database
+    #     (check before scheme search to avoid spurious matches)
+    # ------------------------------------------------------------------
+    _not_in_db = {
+        "housing", "house", "home", "shelter", "pmay", "pradhan", "awas",
+        "health", "healthcare", "hospital", "medical", "treatment",
+        "water", "sanitation", "toilet", "swachh",
+        "road", "infrastructure", "transport", "railway",
+        "electricity", "solar", "energy", "lpg",
+        "food", "ration", "grain", "pds",
+    }
+    # Only fire if there's no other strong intent — i.e. no scheme keyword overlap
+    if token_set & _not_in_db and len(tokens) <= 8:
+        # Check if the query also contains a strong scheme keyword — if so, let search handle it
+        _scheme_keywords = set()
+        for s in SCHEMES:
+            _scheme_keywords.update(s["name"].lower().split())
+        overlap_with_schemes = token_set & _scheme_keywords
+        if not overlap_with_schemes:
+            return _plain(
+                "WelfareConnect's current database focuses on schemes covering education, "
+                "skills & employment, business & livelihood, pension & social security, "
+                "agriculture, financial inclusion, and digital services.\n\n"
+                "The topic you asked about may fall outside what the current database covers. "
+                "For a wider search across all government schemes, you can visit:\n"
+                "• **india.gov.in** — National Government Services Portal\n"
+                "• **myscheme.gov.in** — Government scheme finder across all sectors\n\n"
+                "Is there anything else I can help you with from the WelfareConnect database?",
+                "not_found"
+            )
+
+    # ------------------------------------------------------------------
+    # Run scheme search — all conversational handlers have run above
     # ------------------------------------------------------------------
     scored  = _scheme_search(raw, max_results=5)
     matches = [s for _, s in scored]
@@ -742,12 +1140,13 @@ def _build_response(message):
     return {
         "type":   "not_found",
         "text":   (
-            "I wasn't able to find scheme information matching your question in the "
-            "WelfareConnect database. The database currently covers 30 central and state "
-            "government schemes.\n\n"
+            "I wasn't able to find information matching your question in the "
+            "WelfareConnect database. The database currently covers "
+            f"{len(SCHEMES)} central and state government schemes.\n\n"
             "You could try:\n"
             "• Rephrasing with different keywords (e.g. \"student scholarship\", \"pension\", \"loan\")\n"
             "• Using the **Find Schemes** section to browse and filter all schemes\n"
+            "• Asking about a specific scheme name (e.g. \"Tell me about MGNREGA\")\n"
             "• Visiting the National Government Services Portal at india.gov.in for a broader search"
         ),
         "schemes": [],
