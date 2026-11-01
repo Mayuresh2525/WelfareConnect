@@ -123,17 +123,29 @@ def get_schemes():
     results = []
 
     for s in SCHEMES:
+        # Build a broad search blob that covers all relevant text fields.
+        # documents and steps are lists, so join them safely with a
+        # fallback to an empty list when the field is missing or None.
         blob = " ".join([
-            s["name"],
-            s["category"],
-            s["audience"],
-            s["summary"]
+            s.get("name", ""),
+            s.get("category", ""),
+            s.get("audience", ""),
+            s.get("tags", ""),
+            s.get("summary", ""),
+            s.get("eligibility", ""),
+            s.get("benefits", ""),
+            " ".join(s.get("documents", []) or []),
+            " ".join(s.get("steps", []) or []),
         ]).lower()
 
+        # Apply keyword filter: skip if a keyword was given and it does
+        # not appear anywhere in the combined blob.
         if q and q not in blob:
             continue
 
-        if category != "All" and s["category"] != category:
+        # Apply strict category filter: skip if a specific category was
+        # selected and this scheme belongs to a different one.
+        if category != "All" and s.get("category") != category:
             continue
 
         results.append(s)
@@ -462,51 +474,60 @@ def _scheme_search(query, max_results=5):
     Returns list of (score, scheme) tuples — the score is kept so
     callers can check dominance.
     """
+    import re as _re
+
     q = query.lower().strip()
     if not q:
         return []
 
+    # Strip punctuation from query for matching
+    q_clean = _re.sub(r"[^a-z0-9 ]", " ", q)
     scored = []
-    tokens = [t for t in q.replace(",", " ").split() if len(t) > 2]
+    tokens = [t for t in q_clean.split() if len(t) > 2]
 
     for s in SCHEMES:
         score = 0
 
-        name_l = s["name"].lower()
+        name_l       = s["name"].lower()
+        name_clean   = _re.sub(r"[^a-z0-9 ]", " ", name_l)
+
         # Exact or near-exact name match
-        if q == name_l:
+        if q_clean.strip() == name_clean.strip():
             score += 100
-        elif q in name_l:
+        elif q_clean.strip() in name_clean:
             score += 60
         else:
-            # Partial token matches on name
+            # Partial token matches on name (use cleaned name)
             for t in tokens:
-                if t in name_l:
+                if t in name_clean:
                     score += 15
 
         # Category / audience match
-        cat_l = s["category"].lower()
-        aud_l = s["audience"].lower()
+        cat_l = _re.sub(r"[^a-z0-9 ]", " ", s["category"].lower())
+        aud_l = _re.sub(r"[^a-z0-9 ]", " ", s["audience"].lower())
+        tags_l = _re.sub(r"[^a-z0-9 ]", " ", s.get("tags", "").lower())
         for t in tokens:
             if t in cat_l:
                 score += 12
             if t in aud_l:
                 score += 10
+            if t in tags_l:
+                score += 8
 
         # Summary / eligibility / benefits
-        rich_blob = " ".join([
+        rich_blob = _re.sub(r"[^a-z0-9 ]", " ", " ".join([
             s.get("summary", ""),
             s.get("eligibility", ""),
             s.get("benefits", ""),
-        ]).lower()
+        ]).lower())
         for t in tokens:
             if t in rich_blob:
                 score += 5
 
         # Documents / steps
-        detail_blob = " ".join(
+        detail_blob = _re.sub(r"[^a-z0-9 ]", " ", " ".join(
             s.get("documents", []) + s.get("steps", [])
-        ).lower()
+        ).lower())
         for t in tokens:
             if t in detail_blob:
                 score += 2
@@ -896,19 +917,207 @@ def _build_response(message):
         )
 
     # ------------------------------------------------------------------
-    # 10. Profile-based guidance: student
+    # 10. Off-topic guard (expanded) — runs BEFORE profile handlers and
+    #     scheme search so unrelated questions never reach scheme logic.
     # ------------------------------------------------------------------
-    student_profile = {"student", "students", "studying", "study",
-                       "college", "university", "school", "scholarship",
-                       "degree", "diploma", "undergraduate", "postgraduate"}
-    profile_verbs   = {"am", "im", "i'm", "looking", "want", "need",
-                       "suggest", "recommend", "what", "explore", "help"}
+    _off_topic_words = {
+        # Sports & games
+        "weather", "cricket", "football", "basketball", "tennis", "sport",
+        "sports", "badminton", "volleyball", "hockey", "chess", "golf",
+        "swimming", "athlete", "athletics", "olympics", "ipl", "fifa",
+        "game", "games", "player", "players", "team", "teams", "match",
+        "tournament", "league",
+        # Entertainment
+        "movie", "movies", "film", "films", "actor", "actress", "celebrity",
+        "celebrities", "song", "songs", "music", "album", "series", "netflix",
+        "bollywood", "hollywood", "ott", "streaming",
+        # Food & lifestyle
+        "recipe", "cook", "cooking", "cuisine", "restaurant", "hotel",
+        "dating", "relationship", "fashion", "style", "fitness", "gym",
+        # Finance & general market
+        "stock", "stocks", "crypto", "bitcoin", "cryptocurrency", "forex",
+        "share", "market", "trading", "investment", "mutual", "sensex",
+        "nifty", "broker",
+        # Astrology & entertainment misc
+        "astrology", "horoscope", "zodiac", "joke", "jokes",
+        # Travel
+        "travel", "flight", "airline", "ticket", "visa", "passport",
+        "tourism", "trip", "vacation",
+        # General science / technology topics unrelated to welfare
+        "python", "java", "javascript", "programming", "coding", "code",
+        "html", "css", "react", "angular", "node", "database", "sql",
+        "algorithm", "software", "hardware", "computer", "laptop",
+        "smartphone", "phone", "android", "ios", "iphone", "gadget",
+        "robot", "drone", "satellite", "rocket", "spacecraft",
+        "artificial", "intelligence", "machine", "learning", "neural",
+        "chatgpt", "openai", "blockchain", "nft",
+        # Academic subjects (non-welfare)
+        "maths", "math", "mathematics", "science", "history", "geography",
+        "biology", "physics", "chemistry", "botany", "zoology", "geology",
+        "literature", "grammar", "language", "linguistics", "philosophy",
+        "psychology", "sociology", "economics", "politics", "political",
+        "constitution", "law", "legal", "lawyer", "court", "judge",
+        # General knowledge
+        "capital", "country", "countries", "continent", "ocean", "river",
+        "mountain", "planet", "solar", "system", "galaxy", "universe",
+        "population", "election", "president", "prime", "minister",
+        "parliament", "war", "army", "navy", "airforce", "military",
+        "flag", "currency", "religion", "temple", "church", "mosque",
+        "festival", "culture", "tradition", "mythology",
+        # Medicine & health (not welfare schemes)
+        "doctor", "medicine", "hospital", "disease", "virus", "vaccine",
+        "covid", "cancer", "diabetes", "surgery", "therapy", "treatment",
+        "symptom", "diagnosis", "pharmacy", "drug", "tablet", "tablet",
+        # Misc
+        "news", "newspaper", "headline", "gossip",
+    }
+    # Only fire if none of the tokens are scheme-name words (safety valve
+    # so a message like "Tell me about the Pradhan Mantri science scheme"
+    # can still proceed to scheme search)
+    _scheme_name_words = set()
+    for _s in SCHEMES:
+        _scheme_name_words.update(
+            t for t in _s["name"].lower().replace("-", " ").split()
+            if len(t) > 3
+        )
+    if (token_set & _off_topic_words) and not (token_set & _scheme_name_words):
+        return _plain(
+            "I'm the WelfareConnect Assistant — I'm focused on government welfare schemes "
+            "and how to use the WelfareConnect website.\n\n"
+            "I'm not able to help with that topic, but I'm happy to help you:\n"
+            "• Discover schemes (e.g. \"Show education schemes\")\n"
+            "• Understand a specific scheme (e.g. \"Tell me about PM-KISAN\")\n"
+            "• Find documents or application steps\n"
+            "• Navigate the WelfareConnect website\n\n"
+            "What would you like to know about welfare schemes?",
+            "not_found"
+        )
+
+    # ------------------------------------------------------------------
+    # 11. Welfare-adjacent topics not in the current database
+    # ------------------------------------------------------------------
+    _not_in_db = {
+        "housing", "house", "home", "shelter", "pmay", "awas",
+        "health", "healthcare", "medical",
+        "water", "sanitation", "toilet", "swachh",
+        "road", "infrastructure", "transport", "railway",
+        "electricity", "energy", "lpg",
+        "ration", "grain", "pds",
+    }
+    if token_set & _not_in_db:
+        _scheme_kw = set()
+        for _s in SCHEMES:
+            _scheme_kw.update(
+                t for t in _s["name"].lower().replace("-", " ").split()
+                if len(t) > 3
+            )
+        if not (token_set & _scheme_kw):
+            return _plain(
+                "WelfareConnect's current database focuses on schemes covering education, "
+                "skills & employment, business & livelihood, pension & social security, "
+                "agriculture, financial inclusion, and digital services.\n\n"
+                "The topic you asked about may fall outside what the current database covers. "
+                "For a wider search across all government schemes, you can visit:\n"
+                "• **india.gov.in** — National Government Services Portal\n"
+                "• **myscheme.gov.in** — Government scheme finder across all sectors\n\n"
+                "Is there anything else I can help you with from the WelfareConnect database?",
+                "not_found"
+            )
+
+    # ------------------------------------------------------------------
+    # 12. Explicit scheme-intent gate
+    #
+    #     Scheme cards are shown ONLY when the message expresses a clear
+    #     intent to find, explore, compare or get recommendations about
+    #     schemes.  Informational questions ("what is X?") are routed to
+    #     scheme search only when a specific scheme name is detected.
+    # ------------------------------------------------------------------
+
+    # Words that signal the user wants to FIND / EXPLORE schemes
+    _find_intent_words = {
+        "show", "list", "give", "suggest", "recommend", "find", "search",
+        "explore", "browse", "available", "which", "schemes", "scheme",
+        "options", "opportunities", "benefits", "programs", "programmes",
+    }
+    # Words that signal the user wants INFO about a SPECIFIC scheme
+    _info_intent_words = {
+        "what", "explain", "describe", "tell", "about", "details",
+        "eligibility", "eligible", "qualify", "documents", "document",
+        "apply", "application", "steps", "process", "how", "benefit",
+        "amount", "subsidy", "loan", "grant",
+    }
+    # Audience / profile words that map to scheme categories
+    _audience_words = {
+        "student", "students", "youth", "farmer", "farmers", "vendor", "vendors",
+        "artisan", "artisans", "entrepreneur", "entrepreneurs", "worker", "workers",
+        "women", "woman", "senior", "elderly", "disabled", "rural", "poor",
+        "unemployed", "graduate", "graduates",
+    }
+    # Scheme-name keywords — built by stripping punctuation from every
+    # scheme name token that is meaningful (length > 3, not a filler word)
+    import re as _re
+    _scheme_kw_set = set()
+    _kw_filler = {
+        "pradhan", "mantri", "national", "scheme", "yojana",
+        "india", "indian", "under", "from", "with", "that",
+        "prime", "minister", "the", "for", "and", "small",
+    }
+    for _s in SCHEMES:
+        # Strip ALL non-alpha-numeric characters before splitting
+        _clean_name = _re.sub(r"[^a-z0-9 ]", " ", _s["name"].lower())
+        _toks = [
+            t for t in _clean_name.split()
+            if len(t) > 2 and t not in _kw_filler
+        ]
+        if _toks:
+            # Take first 5 meaningful tokens AND the last token (often the acronym)
+            _candidates = _toks[:5]
+            if _toks[-1] not in _candidates:
+                _candidates.append(_toks[-1])
+            _scheme_kw_set.update(_candidates)
+
+    has_find_intent  = bool(token_set & _find_intent_words)
+    has_info_intent  = bool(token_set & _info_intent_words)
+    has_audience     = bool(token_set & _audience_words)
+    # Also clean query tokens the same way for scheme-name matching
+    _clean_query_tokens = set(
+        _re.sub(r"[^a-z0-9]", "", t) for t in tokens
+    ) - {""}
+    has_scheme_name  = bool(_clean_query_tokens & _scheme_kw_set)
+
+    # Decide whether to proceed to scheme search at all.
+    # We proceed if:
+    # (a) user clearly wants to find/explore schemes, OR
+    # (b) user asks about a specific scheme name (info intent + name hit), OR
+    # (c) user wants to find schemes for a particular audience
+    # Pure informational questions with NO scheme name don't proceed —
+    # the min-score threshold is the secondary safety net.
+    _proceed_to_search = (
+        has_find_intent or
+        has_scheme_name or
+        (has_find_intent and has_audience)
+    )
+
+    # ------------------------------------------------------------------
+    # 13. Profile-based guidance — only fires when intent is to FIND
+    #     schemes; "what is X?" style questions bypass these handlers.
+    # ------------------------------------------------------------------
+
+    # Require an explicit find/recommend verb, not just any info word
+    _profile_find_verbs = {
+        "suggest", "recommend", "show", "list", "find", "explore",
+        "want", "need", "looking", "available", "schemes", "scheme",
+        "help", "options", "opportunities",
+    }
+
+    # student
+    student_profile = {
+        "student", "students", "studying", "scholarship",
+        "undergraduate", "postgraduate",
+    }
     is_student_profile = (
         student_profile & token_set and
-        (profile_verbs & token_set or len(tokens) <= 4) and
-        # Don't fire if they're asking about a specific named scheme
-        not any(w in q_lower for w in ["eligib", "benefit", "document", "apply",
-                                        "pm-kisan", "mgnrega", "nats", "naps"])
+        _profile_find_verbs & token_set
     )
     if is_student_profile:
         edu_schemes = [s for s in SCHEMES if s["category"] == "Education"][:4]
@@ -924,17 +1133,14 @@ def _build_response(message):
             "intent":  "general"
         }
 
-    # ------------------------------------------------------------------
-    # 11. Profile-based guidance: business / entrepreneur
-    # ------------------------------------------------------------------
-    biz_profile = {"business", "entrepreneur", "enterprise", "startup",
-                   "shop", "vendor", "self-employed", "artisan", "msme",
-                   "livelihood", "manufacturing", "trade", "food"}
+    # business / entrepreneur
+    biz_profile = {
+        "entrepreneur", "enterprise", "startup", "vendor", "artisan",
+        "msme", "livelihood", "manufacturing",
+    }
     is_biz_profile = (
         biz_profile & token_set and
-        profile_verbs & token_set and
-        not any(w in q_lower for w in ["eligib", "benefit", "document", "apply",
-                                        "pmegp", "svanidhi", "stand-up", "pmfme"])
+        _profile_find_verbs & token_set
     )
     if is_biz_profile:
         biz_schemes = [s for s in SCHEMES if s["category"] == "Business & Livelihood"][:4]
@@ -949,17 +1155,13 @@ def _build_response(message):
             "intent":  "general"
         }
 
-    # ------------------------------------------------------------------
-    # 12. Profile-based guidance: employment / skills / job seeker
-    # ------------------------------------------------------------------
-    empl_profile = {"job", "jobs", "employment", "unemployed", "work", "career",
-                    "skill", "skills", "training", "apprentice", "apprenticeship",
-                    "rural", "unskilled"}
+    # employment / skills
+    empl_profile = {
+        "unemployed", "apprentice", "apprenticeship", "unskilled",
+    }
     is_empl_profile = (
         empl_profile & token_set and
-        profile_verbs & token_set and
-        not any(w in q_lower for w in ["eligib", "benefit", "document", "apply",
-                                        "mgnrega", "ddu", "rseti", "nats", "naps", "ncs"])
+        _profile_find_verbs & token_set
     )
     if is_empl_profile:
         empl_schemes = [s for s in SCHEMES
@@ -976,103 +1178,97 @@ def _build_response(message):
         }
 
     # ------------------------------------------------------------------
-    # 13. Off-topic guard — runs before scheme search so clearly
-    #     unrelated questions never leak into scheme results
+    # 14. "I am a [profile]" — acknowledge and offer help without
+    #     immediately dumping scheme cards
     # ------------------------------------------------------------------
-    _off_topic_words = {
-        "weather", "cricket", "football", "basketball", "tennis", "sport",
-        "sports", "movie", "movies", "film", "films", "recipe", "cook",
-        "cooking", "news", "stock", "stocks", "crypto", "bitcoin", "share",
-        "market", "astrology", "horoscope", "joke", "jokes", "game", "games",
-        "travel", "hotel", "flight", "restaurant", "dating", "relationship",
-        "celebrity", "song", "music", "maths", "math", "science", "history",
-        "geography", "biology", "physics", "chemistry",
+    identity_words = {
+        "student", "farmer", "vendor", "artisan", "worker", "unemployed",
+        "youth", "woman", "women", "graduate", "entrepreneur", "senior",
+        "elderly", "disabled", "rural",
     }
-    if token_set & _off_topic_words:
+    identity_signals = {"am", "im", "i'm", "myself"}
+    is_identity_stmt = (
+        identity_words & token_set and
+        identity_signals & token_set and
+        len(tokens) <= 7
+    )
+    if is_identity_stmt:
+        matched = (identity_words & token_set).pop()
         return _plain(
-            "I'm the WelfareConnect Assistant — I'm focused on government welfare schemes "
-            "and how to use the WelfareConnect website.\n\n"
-            "I'm not able to help with that topic, but I'm happy to help you:\n"
-            "• Discover schemes (e.g. \"Show education schemes\")\n"
-            "• Understand a specific scheme (e.g. \"Tell me about PM-KISAN\")\n"
-            "• Find documents or application steps\n"
-            "• Navigate the WelfareConnect website\n\n"
-            "What would you like to know about welfare schemes?",
-            "not_found"
+            f"Thanks for sharing that. As a **{matched}**, there may be relevant government "
+            f"welfare schemes on WelfareConnect that could help you.\n\n"
+            f"You can:\n"
+            f"• Ask me to show schemes for {matched}s — e.g. \"Show schemes for {matched}s\"\n"
+            f"• Use the **Find Schemes** section and filter by category\n"
+            f"• Use the **✨ Find My Schemes** wizard on the website\n\n"
+            "What would you like to know specifically — eligibility, benefits, documents, "
+            "or application steps for a particular scheme?"
         )
 
     # ------------------------------------------------------------------
-    # 14. Welfare-adjacent topics not in the current database
-    #     (check before scheme search to avoid spurious matches)
+    # SCHEME SEARCH — only reached when _proceed_to_search is True
+    # A minimum score of 15 is required to show any scheme card.
+    # This prevents common English words from generating scheme results.
     # ------------------------------------------------------------------
-    _not_in_db = {
-        "housing", "house", "home", "shelter", "pmay", "pradhan", "awas",
-        "health", "healthcare", "hospital", "medical", "treatment",
-        "water", "sanitation", "toilet", "swachh",
-        "road", "infrastructure", "transport", "railway",
-        "electricity", "solar", "energy", "lpg",
-        "food", "ration", "grain", "pds",
-    }
-    # Only fire if there's no other strong intent — i.e. no scheme keyword overlap
-    if token_set & _not_in_db and len(tokens) <= 8:
-        # Check if the query also contains a strong scheme keyword — if so, let search handle it
-        _scheme_keywords = set()
-        for s in SCHEMES:
-            _scheme_keywords.update(s["name"].lower().split())
-        overlap_with_schemes = token_set & _scheme_keywords
-        if not overlap_with_schemes:
-            return _plain(
-                "WelfareConnect's current database focuses on schemes covering education, "
-                "skills & employment, business & livelihood, pension & social security, "
-                "agriculture, financial inclusion, and digital services.\n\n"
-                "The topic you asked about may fall outside what the current database covers. "
-                "For a wider search across all government schemes, you can visit:\n"
-                "• **india.gov.in** — National Government Services Portal\n"
-                "• **myscheme.gov.in** — Government scheme finder across all sectors\n\n"
-                "Is there anything else I can help you with from the WelfareConnect database?",
-                "not_found"
-            )
+    if not _proceed_to_search:
+        # The message has no scheme-find intent and no scheme name — give a
+        # polite "out of scope" response rather than searching.
+        return _plain(
+            "I'm here to help with WelfareConnect and government welfare schemes.\n\n"
+            "I can help you:\n"
+            "• **Find schemes** — e.g. \"Show education schemes\" or \"Schemes for farmers\"\n"
+            "• **Learn about a specific scheme** — e.g. \"What is PM-KISAN?\"\n"
+            "• **Check eligibility or documents** — e.g. \"Who is eligible for PMKVY?\"\n"
+            "• **Understand application steps** — e.g. \"How do I apply for PM SVANidhi?\"\n\n"
+            "What would you like to know?",
+            "general"
+        )
 
-    # ------------------------------------------------------------------
-    # Run scheme search — all conversational handlers have run above
-    # ------------------------------------------------------------------
+    _MIN_SCORE = 15  # minimum relevance score to show a scheme card
+
     scored  = _scheme_search(raw, max_results=5)
+    # Filter out low-confidence matches
+    scored  = [(sc, s) for sc, s in scored if sc >= _MIN_SCORE]
     matches = [s for _, s in scored]
     intent  = _detect_intent(tokens)
     cat     = _detect_category(tokens)
 
     # ------------------------------------------------------------------
-    # If top result is a very strong name match, give scheme detail
+    # If top result is a strong name match → single scheme detail view
     # ------------------------------------------------------------------
     if matches:
-        top_score       = scored[0][0]
-        top             = scored[0][1]
-        second_score    = scored[1][0] if len(scored) > 1 else 0
+        top_score    = scored[0][0]
+        top          = scored[0][1]
+        second_score = scored[1][0] if len(scored) > 1 else 0
 
         top_name_l = top["name"].lower()
         name_words = set(top_name_l.replace("-", " ").split())
         query_words = set(q_lower.replace("-", " ").split())
         overlap = name_words & query_words
-        filler = {"the", "for", "and", "are", "what", "tell", "about",
-                  "me", "find", "show", "give", "get", "how", "with",
-                  "can", "this", "that", "have", "need", "want", "know",
-                  "info", "information", "details", "scheme", "schemes",
-                  "yojana", "pradhan", "mantri", "rashtriya", "national"}
-
-        name_meaningful    = name_words  - filler
-        query_meaningful   = query_words - filler
+        filler = {
+            "the", "for", "and", "are", "what", "tell", "about",
+            "me", "find", "show", "give", "get", "how", "with",
+            "can", "this", "that", "have", "need", "want", "know",
+            "info", "information", "details", "scheme", "schemes",
+            "yojana", "pradhan", "mantri", "rashtriya", "national",
+            "pm", "is", "of", "in", "to", "an", "its", "does",
+        }
+        name_meaningful  = name_words  - filler
+        query_meaningful = query_words - filler
         meaningful_overlap = name_meaningful & query_meaningful
 
         strong_name_match = (
             q_lower in top_name_l or
             top_name_l in q_lower or
             len(overlap) >= 3 or
-            (len(meaningful_overlap) >= 1 and len(name_meaningful) <= 3) or
-            (len(name_meaningful) > 0 and
+            # Meaningful overlap ≥ 60% of scheme name meaningful words
+            # (require at least 2 meaningful words in the name to avoid
+            #  firing on single-word short names)
+            (len(name_meaningful) >= 2 and
              len(meaningful_overlap) / len(name_meaningful) >= 0.6) or
-            # Top score dominates runner-up by 2× and has a name component
-            (top_score >= 15 and second_score == 0) or
-            (top_score >= 20 and top_score >= second_score * 2)
+            # Top score dominates runner-up by 2× with a high minimum
+            (top_score >= 30 and second_score == 0) or
+            (top_score >= 40 and top_score >= second_score * 2)
         )
 
         if strong_name_match and intent in ("general", "benefits", "eligibility", "documents", "apply"):
@@ -1084,70 +1280,67 @@ def _build_response(message):
                 "documents":   f"Here are the **documents required** for **{s['name']}** from our database:",
                 "apply":       f"Here's **how to apply** for **{s['name']}** from our database:",
             }[intent]
-
             return {
-                "type":   "scheme_detail",
-                "text":   intro,
+                "type":    "scheme_detail",
+                "text":    intro,
                 "schemes": [s],
-                "intent": intent
+                "intent":  intent
             }
 
     # ------------------------------------------------------------------
-    # Category-based list
+    # Category-based list (when a category keyword was detected but
+    # scheme name search returned nothing above the score threshold)
     # ------------------------------------------------------------------
     if cat and not matches:
         cat_schemes = [s for s in SCHEMES if s["category"] == cat][:5]
         if cat_schemes:
             return {
-                "type":   "scheme_list",
-                "text":   (
-                    f"I found {len(cat_schemes)} scheme(s) in the "
-                    f"**{cat}** category that may be relevant. "
-                    "Please check each scheme's official eligibility criteria to confirm whether you qualify."
+                "type":    "scheme_list",
+                "text":    (
+                    f"Here are schemes in the **{cat}** category from the WelfareConnect database. "
+                    "Please verify your eligibility on the official portal before applying."
                 ),
                 "schemes": cat_schemes,
                 "intent":  "general"
             }
 
     # ------------------------------------------------------------------
-    # Keyword search returned results
+    # Keyword search returned results above the score threshold
     # ------------------------------------------------------------------
     if matches:
         if len(matches) == 1:
             s = matches[0]
             return {
-                "type":   "scheme_detail",
-                "text":   f"The closest match in our database is **{s['name']}**:",
+                "type":    "scheme_detail",
+                "text":    f"The closest match in our database is **{s['name']}**:",
                 "schemes": [s],
                 "intent":  intent
             }
-
         cat_hint = f" in the **{cat}** category" if cat else ""
         return {
-            "type":   "scheme_list",
-            "text":   (
-                f"I found {len(matches)} scheme(s){cat_hint} that may be relevant to your question. "
-                "These are based on the information available in the WelfareConnect database. "
-                "Please verify your eligibility on the official portal before applying."
+            "type":    "scheme_list",
+            "text":    (
+                f"I found {len(matches)} scheme(s){cat_hint} that match your question. "
+                "These are from the WelfareConnect database — please verify eligibility "
+                "on the official portal before applying."
             ),
             "schemes": matches,
             "intent":  intent
         }
 
     # ------------------------------------------------------------------
-    # No results
+    # No results above the score threshold
     # ------------------------------------------------------------------
     return {
-        "type":   "not_found",
-        "text":   (
-            "I wasn't able to find information matching your question in the "
+        "type":    "not_found",
+        "text":    (
+            "I wasn't able to find a scheme matching your question in the "
             "WelfareConnect database. The database currently covers "
             f"{len(SCHEMES)} central and state government schemes.\n\n"
             "You could try:\n"
-            "• Rephrasing with different keywords (e.g. \"student scholarship\", \"pension\", \"loan\")\n"
-            "• Using the **Find Schemes** section to browse and filter all schemes\n"
-            "• Asking about a specific scheme name (e.g. \"Tell me about MGNREGA\")\n"
-            "• Visiting the National Government Services Portal at india.gov.in for a broader search"
+            "• Rephrasing with the scheme name (e.g. \"Tell me about PM-KISAN\")\n"
+            "• Using the **Find Schemes** section to browse all schemes by category\n"
+            "• Visiting **myscheme.gov.in** for a broader government scheme search"
         ),
         "schemes": [],
         "intent":  "not_found"

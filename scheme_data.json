@@ -132,27 +132,29 @@
   },
   {
     "id": 6,
-    "name": "PM SVANidhi",
+    "name": "PM SVANidhi (PM Street Vendor's AtmaNirbhar Nidhi)",
     "category": "Business & Livelihood",
-    "audience": "Street Vendors",
-    "summary": "Digital guide to government support for eligible street vendors.",
-    "eligibility": "Eligibility is governed by current PM SVANidhi guidelines and vendor verification requirements.",
-    "benefits": "Working-capital credit and related support according to current scheme guidelines.",
+    "audience": "Street Vendors / Youth / Business / Vendor",
+    "tags": "Micro-Credit • Street Vendors & Hawkers • Urban Livelihood • Self-Employed Youth & Vendors",
+    "summary": "Affordable collateral-free working capital micro-loans designed to empower urban and peri-urban street vendors to resume and expand daily operations.",
+    "eligibility": "Urban street vendors in possession of a Certificate of Vending or Letter of Recommendation (LoR) issued by the local Municipal Body / Town Vending Committee (TVC). Eligibility is also governed by current PM SVANidhi guidelines and vendor verification requirements.",
+    "benefits": "Collateral-free working capital loan of ₹10,000 in the first tranche. Loan escalating to ₹20,000 and ₹50,000 upon timely repayment. 7% interest subsidy. Up to ₹1,200 annual digital transaction cashback.",
     "documents": [
-      "Vendor/identity documents",
-      "Bank details",
-      "Documents requested by the official process"
+      "Aadhaar Card",
+      "Certificate of Vending or ULB Letter of Recommendation (LoR)",
+      "Bank account passbook / statement",
+      "Aadhaar-linked active mobile number"
     ],
     "steps": [
-      "Check current eligibility",
-      "Prepare vendor/identity documents",
-      "Use the official PM SVANidhi portal or authorised channel",
-      "Submit the application",
-      "Track the application"
+      "Verify your name in the local Town Vending Committee survey",
+      "Open the official PM SVANidhi portal or visit a Common Service Centre (CSC)",
+      "Authenticate your mobile number via Aadhaar OTP",
+      "Choose your preferred lending bank/NBFC and submit the e-application",
+      "Undergo verification by the Urban Local Body and receive credit directly via DBT"
     ],
     "official": "https://pmsvanidhi.mohua.gov.in/",
     "source": "MoHUA / PM SVANidhi official portal",
-    "verified": "2026-09-19"
+    "verified": "2026-11-01"
   },
   {
     "id": 7,
@@ -303,7 +305,8 @@
     "id": 13,
     "name": "PM-USP Central Sector Scheme of Scholarship (CSSS)",
     "category": "Education",
-    "audience": "College & University Students",
+    "audience": "College & University Students / Youth",
+    "tags": "Education & Scholarship • Higher Education Pursuing Youth",
     "summary": "A merit-cum-means scholarship from the Ministry of Education for meritorious students pursuing higher education at colleges and universities across India, to help meet day-to-day expenses during their studies.",
     "eligibility": "Students who scored above the 80th percentile of successful candidates in their relevant stream in Class XII from a recognised Board; enrolled in a regular (non-correspondence/distance) undergraduate or postgraduate course at a college or university; family income from all sources not exceeding ₹4.5 lakh per annum; not receiving any other scholarship or fee reimbursement. Diploma students and students who took a gap year after Class XII are not eligible.",
     "benefits": "₹10,000 per annum for the first three years of undergraduate study, and ₹20,000 per annum for postgraduate and professional degree courses (e.g. Medical, Engineering). Scholarship is disbursed directly to the student's bank account through DBT via the National Scholarship Portal.",
@@ -441,7 +444,8 @@
     "id": 18,
     "name": "National Apprenticeship Training Scheme (NATS)",
     "category": "Education",
-    "audience": "Graduate & Diploma Holders",
+    "audience": "Graduate & Diploma Holders / Youth",
+    "tags": "Higher Education • Engineering & Diploma Graduates",
     "summary": "A Ministry of Education scheme under the Apprentices Act, 1961, that provides practical on-the-job training to fresh engineering graduates, diploma holders, and vocational certificate holders with participating industries across India, bridging the gap between academic knowledge and industry skills.",
     "eligibility": "Fresh graduates (B.E./B.Tech or equivalent) and diploma holders from recognised institutions who have not yet undergone apprenticeship training under NATS. Typically for candidates who have completed their degree or diploma and are looking for practical industry exposure. Vocational certificate holders in relevant fields are also eligible.",
     "benefits": "Stipend paid by the employer (minimum rates prescribed by the government, revised from April 2026). On-the-job training of 6 months to 1 year at a registered establishment. Certificate of Apprenticeship Training on completion, issued by BOAT/BOPT. Government shares part of the stipend cost for eligible apprentices through DBT.",
@@ -469,7 +473,8 @@
     "id": 19,
     "name": "National Apprenticeship Promotion Scheme (NAPS)",
     "category": "Skills & Employment",
-    "audience": "Apprentices & Employers",
+    "audience": "Apprentices, Employers & Youth",
+    "tags": "Apprenticeship & Stipend • Freshers / Technical Youth",
     "summary": "A Ministry of Skill Development and Entrepreneurship scheme that promotes apprenticeship training in India by sharing the cost of stipend with employers and supporting basic training, making it easier for establishments to hire and train apprentices under the Apprentices Act.",
     "eligibility": "Any employer registered under the Apprentices Act can participate. Apprentices must be at least 14 years of age and meet the educational qualification prescribed for the relevant trade. The stipend-sharing benefit applies to apprentices engaged by eligible establishments through the official apprenticeship portal.",
     "benefits": "Government reimburses 25% of the prescribed stipend per apprentice per month, subject to a maximum of ₹1,500 per month per apprentice. Additionally, basic training cost is shared with Basic Training Providers up to ₹7,500 (one-time, for 500 hours / 3 months) per eligible trainee. This reduces the financial burden on employers and encourages wider apprenticeship engagement.",
@@ -496,7 +501,8 @@
     "id": 20,
     "name": "National Career Service (NCS) Portal",
     "category": "Skills & Employment",
-    "audience": "Job Seekers, Students & Employers",
+    "audience": "Job Seekers, Students, Employers & Youth",
+    "tags": "Skills & Employment • Job Seekers & Freshers",
     "summary": "A free digital platform from the Ministry of Labour and Employment that connects job seekers with employers across India. It offers job listings in both private and government sectors, career counselling, psychometric assessments, details of career centres, and information on job fairs and employment events.",
     "eligibility": "Any Indian citizen seeking employment or career guidance can register as a job seeker on NCS free of charge. Employers, organisations, and career centres can also register. There is no income or qualification barrier for registration.",
     "benefits": "Free access to job listings across government and private sectors. Psychometric and aptitude assessment tools to guide career choices. Information about upcoming job fairs and career events. Ability to connect with career centres in your district. NCS does not charge any fee at any stage of registration, job application, or employment-related services.",
@@ -522,7 +528,8 @@
     "id": 21,
     "name": "PM Vishwakarma",
     "category": "Skills & Employment",
-    "audience": "Traditional Artisans & Craftspeople",
+    "audience": "Traditional Artisans & Craftspeople / Business / Vendor",
+    "tags": "Artisan Support • Traditional Craftsmen & Trades",
     "summary": "A Central Sector Scheme launched in September 2023 to provide end-to-end support to traditional artisans and craftspeople working in 18 identified trades, helping them improve the quality and reach of their products and integrate into formal economic value chains.",
     "eligibility": "An artisan or craftsperson aged 18 years or above engaged in one of the 18 specified family-based traditional trades in the unorganised sector on a self-employment basis. The applicant should not be enrolled in similar central government credit-based schemes (PMEGP, PM SVANidhi, Mudra). One member per family is eligible. The 18 trades include: Carpenter, Boat Maker, Armourer, Blacksmith, Hammer & Tool Kit Maker, Locksmith, Goldsmith, Potter, Sculptor/Stone Carver, Cobbler, Mason (Raajmistri), Basket/Mat/Broom Maker, Doll & Toy Maker, Barber, Garland Maker, Washerman, Tailor, and Fishing Net Maker.",
     "benefits": "PM Vishwakarma Certificate and ID Card. Skill training: 5-day basic training and 15+ day advanced training with a stipend of ₹500 per day during training. Toolkit incentive grant of ₹15,000 (disbursed through e-RUPI). Collateral-free credit support: loan up to ₹1 lakh (first tranche) and up to ₹2 lakh (second tranche) at a concessional interest rate of 5% (government bears the interest subvention cap). Digital transaction incentives and market linkage support.",
@@ -604,7 +611,8 @@
     "id": 24,
     "name": "Stand-Up India",
     "category": "Business & Livelihood",
-    "audience": "SC/ST and Women Entrepreneurs",
+    "audience": "SC/ST and Women Entrepreneurs / Youth / Business / Vendor",
+    "tags": "Greenfield Credit • SC/ST & Women Business Owners • Business & Livelihood",
     "summary": "A Ministry of Finance scheme that facilitates bank loans to Scheduled Caste, Scheduled Tribe, and women entrepreneurs for setting up new (greenfield) enterprises in manufacturing, services, agri-allied, or trading sectors, promoting economic inclusion and entrepreneurship among underrepresented groups.",
     "eligibility": "SC or ST individual entrepreneur, or a woman entrepreneur, aged 18 years or above. For non-individual enterprises, at least 51% shareholding and controlling stake must be held by an SC/ST or woman entrepreneur. The loan is available only for a greenfield project — the applicant's first venture in the relevant sector. The borrower must not be in default to any bank or financial institution.",
     "benefits": "Composite bank loan (term loan + working capital) of ₹10 lakh to ₹1 crore per enterprise. The loan is expected to cover up to 85% of the project cost. Interest rate is the bank's lowest applicable rate for the category (not exceeding MCLR + 3% + tenure premium). Repayment period of up to 7 years with a maximum moratorium of 18 months.",
@@ -781,5 +789,445 @@
     "official": "https://bhashini.gov.in/",
     "source": "Digital India BHASHINI Division (DIBD) / Digital India Corporation / MeitY, Government of India",
     "verified": "2026-10-02"
+  },
+  {
+    "id": 31,
+    "name": "Pradhan Mantri Kaushal Vikas Yojana (PMKVY 4.0)",
+    "category": "Skills & Employment",
+    "audience": "Youth",
+    "tags": "Skills & Training • Unemployed Youth / School Dropouts",
+    "summary": "The flagship skill training program by MSDE that provides free, industry-aligned short-term courses, certification, and post-placement support.",
+    "eligibility": "Any Indian citizen aged 15–45 who is unemployed or looking for skill development.",
+    "benefits": "100% free technical and soft skill training. Government-recognized certification. Assessment. Placement support.",
+    "documents": [
+      "Aadhaar Card / Photo ID",
+      "Educational marksheets / certificates",
+      "Bank passbook / account details (linked with Aadhaar)",
+      "Passport-size photograph"
+    ],
+    "steps": [
+      "Visit the Skill India Digital / PMKVY portal",
+      "Search for accredited training centers in your district",
+      "Register your candidate profile using Aadhaar",
+      "Select your preferred job role/course and enroll",
+      "Attend training, complete the final assessment, and receive certification"
+    ],
+    "official": "https://www.pmkvyproject.org/",
+    "source": "Ministry of Skill Development and Entrepreneurship / PMKVY Portal",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 32,
+    "name": "Pradhan Mantri MUDRA Yojana (PMMY) – Shishu, Kishore & Tarun",
+    "category": "Business & Livelihood",
+    "audience": "Youth / Business / Vendor",
+    "tags": "Business Credit • Micro-Enterprises & Traders • Young Entrepreneurs",
+    "summary": "Non-farm, non-corporate micro-loans providing structured financial backing across growth stages with zero collateral requirements.",
+    "eligibility": "Indian citizens running or setting up revenue-generating micro-enterprises in manufacturing, trading, or service sectors without existing loan defaults. Any Indian citizen aged 18 or above with a viable business plan for a non-farm revenue-generating activity.",
+    "benefits": "Shishu: up to ₹50,000. Kishore: ₹50,001 to ₹5 Lakh. Tarun: ₹5 Lakh to ₹10 Lakh. Tarun Plus: up to ₹20 Lakh. No processing fees. Affordable interest rates. Zero collateral requirements.",
+    "documents": [
+      "Identity Proof (Aadhaar / Voter ID / PAN)",
+      "Residence Proof (Electricity bill / Ration card)",
+      "Quotation of machinery/tools to be purchased or business estimate",
+      "Bank account statement for the past 6 months"
+    ],
+    "steps": [
+      "Prepare your business proposal and itemized cost breakdown",
+      "Apply through the unified JanSamarth portal or visit your preferred bank branch",
+      "Select the appropriate MUDRA loan category based on funding needs (Shishu, Kishore, Tarun)",
+      "Submit your KYC and project cost documents for bank appraisal",
+      "Receive loan sanction and MUDRA debit card for working capital withdrawals"
+    ],
+    "official": "https://www.jansamarth.in/business-loan-pradhan-mantri-mudra-yojana-scheme",
+    "source": "Micro Units Development & Refinance Agency (MUDRA) / Ministry of Finance / JanSamarth Portal",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 33,
+    "name": "PM-YASASVI Central Sector Scholarship",
+    "category": "Education",
+    "audience": "Youth",
+    "tags": "Education & Scholarship • OBC, EBC & DNT Students",
+    "summary": "Comprehensive scholarship scheme by the Ministry of Social Justice & Empowerment for meritorious Other Backward Class, EBC, and DNT students.",
+    "eligibility": "Students belonging to OBC, EBC, or Non-Creamy Layer DNT categories whose annual family income is below ₹2.5 lakh, studying in designated top-class schools or colleges.",
+    "benefits": "Full tuition fee support. Living expenses. Stationery/computer grant allowances paid directly to the bank account.",
+    "documents": [
+      "Caste / Category certificate (OBC/EBC/DNT)",
+      "Annual family income certificate (below ₹2.5 lakh)",
+      "Previous year marksheet (showing 60%+ marks)",
+      "Aadhaar Card & Student Bank Account Details",
+      "Fee receipt and college bonafide certificate"
+    ],
+    "steps": [
+      "Register on the National Scholarship Portal (NSP)",
+      "Complete OTR (One Time Registration) with Aadhaar",
+      "Select PM-YASASVI from the scheme directory",
+      "Upload income, caste, and academic verification documents",
+      "Submit application for institute-level verification"
+    ],
+    "official": "https://scholarships.gov.in/",
+    "source": "Ministry of Social Justice & Empowerment / National Scholarship Portal",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 34,
+    "name": "Startup India Seed Fund Scheme (SISFS)",
+    "category": "Business & Livelihood",
+    "audience": "Youth",
+    "tags": "Innovation & Startups • Tech & Student Founders",
+    "summary": "Financial assistance to early-stage student and youth entrepreneurs for proof of concept, prototype development, and market entry.",
+    "eligibility": "DPIIT-recognized startup incorporated within 2 years, having a viable product idea with market fit, with Indian founders holding at least 51% stake.",
+    "benefits": "Up to ₹20 lakh grant for validation of Proof of Concept and prototype development. Up to ₹50 lakh via debt/convertible debentures for commercialization.",
+    "documents": [
+      "DPIIT recognition certificate",
+      "Pitch deck & prototype/business plan",
+      "Company Incorporation certificate (CIN/LLP)",
+      "Founder identity details (PAN, Aadhaar)"
+    ],
+    "steps": [
+      "Register company on the Startup India portal and apply for DPIIT recognition",
+      "Login to the Seed Fund Scheme portal",
+      "Choose and apply to up to 3 sector-relevant incubators across India",
+      "Present your pitch during incubator evaluation sessions"
+    ],
+    "official": "https://seedfund.startupindia.gov.in/",
+    "source": "Department for Promotion of Industry and Internal Trade (DPIIT) / Startup India",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 35,
+    "name": "Agnipath Scheme",
+    "category": "Skills & Employment",
+    "audience": "Youth",
+    "tags": "Defense & National Service • Armed Forces Aspirants",
+    "summary": "A recruitment model providing Indian youth an opportunity to serve in the Indian Armed Forces as Agniveers for a four-year tenure.",
+    "eligibility": "Unmarried Indian male/female candidates aged between 17.5 and 21 years with 10th or 12th pass qualifications meeting medical fitness benchmarks.",
+    "benefits": "Customized monthly salary package (starting ₹30,000 progressing to ₹40,000). ₹48 lakh life cover. Tax-free Seva Nidhi package of approximately ₹11.71 lakh upon release.",
+    "documents": [
+      "Class 10/12 educational marksheets and passing certificates",
+      "Domicile / Nativity Certificate",
+      "Aadhaar Card",
+      "NCC / Sports certificates (if claiming bonus marks)"
+    ],
+    "steps": [
+      "Register on the official branch portal (Join Indian Army, Navy, or Air Force)",
+      "Complete online exam registration when rally dates are published",
+      "Appear for Computer-Based Common Entrance Exam (CEE)",
+      "Attend physical fitness test (PFT), physical measurement, and medical tests"
+    ],
+    "official": "https://joinindianarmy.nic.in/",
+    "source": "Ministry of Defence / Indian Armed Forces / Join Indian Army Portal",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 36,
+    "name": "Credit Guarantee Fund Trust for Micro and Small Enterprises (CGTMSE)",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "MSME Financing • Emerging Entrepreneurs & MSEs",
+    "summary": "Credit guarantee coverage enabling micro and small enterprises to secure bank credit for term loans and working capital without third-party collateral.",
+    "eligibility": "New and existing Micro and Small Enterprises (MSEs) engaged in manufacturing, services, or select trading activities.",
+    "benefits": "Third-party guarantee coverage for institutional credit facilities up to ₹5 Crore per eligible unit, removing property mortgage barriers.",
+    "documents": [
+      "Udyam Registration Certificate",
+      "Detailed Project Report (DPR) with business viability projections",
+      "Company PAN, GST registration, and Incorporation papers",
+      "Audited or provisional financial balance sheets"
+    ],
+    "steps": [
+      "Register your business unit on the Udyam portal",
+      "Prepare an enterprise proposal covering working capital and machinery requirements",
+      "Approach a CGTMSE-member lending institution (Public/Private Bank or NBFC)",
+      "Request the bank to sanction the facility under CGTMSE guarantee cover",
+      "Bank conducts appraisal and secures direct guarantee cover from the trust"
+    ],
+    "official": "https://www.cgtmse.in/",
+    "source": "Credit Guarantee Fund Trust for Micro and Small Enterprises (CGTMSE) / MSME",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 37,
+    "name": "Udyam Registration (Zero-Cost MSME Portal)",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "Business Formalization • Small Business Owners & Vendors",
+    "summary": "The official government registration portal to classify enterprises as Micro, Small, or Medium, unlocking statutory MSME benefits and protections.",
+    "eligibility": "Any business entity or proprietorship engaged in manufacturing or services meeting the MSME investment and turnover thresholds.",
+    "benefits": "Permanent Udyam registration number. Statutory protection against delayed payments from buyers. Priority sector lending access. Lower trademark registration fees.",
+    "documents": [
+      "Aadhaar Card of the proprietor/managing director",
+      "Business PAN Card",
+      "GSTIN (if turnover requires mandatory GST registration)",
+      "Business bank account details"
+    ],
+    "steps": [
+      "Navigate to the official Udyam Registration portal",
+      "Authenticate the proprietor/promoter's Aadhaar via OTP",
+      "Enter PAN details and enterprise location data",
+      "Enter plant/equipment investment values and turnover figures",
+      "Submit the self-declaration to instantly generate your Udyam Certificate"
+    ],
+    "official": "https://udyamregistration.gov.in/",
+    "source": "Ministry of Micro, Small & Medium Enterprises (MSME) / Udyam Registration Portal",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 38,
+    "name": "Scheme of Fund for Regeneration of Traditional Industries (SFURTI)",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "Cluster Development • Artisans & Traditional Producers",
+    "summary": "Financial assistance to organize traditional artisans and rural craft makers into competitive clusters with modern machinery and market access.",
+    "eligibility": "Non-Government Organizations (NGOs), cooperatives, producer companies, and Panchayati Raj Institutions representing groups of traditional artisans.",
+    "benefits": "Grants up to ₹2.5 Crore for Regular Clusters (up to 500 artisans). Grants up to ₹5 Crore for Major Clusters. Development of Common Facility Centres (CFCs) and product branding.",
+    "documents": [
+      "Implementing Agency registration certificate & bylaws",
+      "Detailed Project Proposal for cluster development",
+      "Roster of enrolled artisans with Aadhaar details",
+      "Land allotment or long-term lease papers for the Common Facility Centre"
+    ],
+    "steps": [
+      "Implementing agency prepares a diagnostic study and preliminary concept note",
+      "Submit the proposal online through the SFURTI MIS portal",
+      "Presentation before the Scheme Steering Committee (SSC)",
+      "Appointment of Technical Agency (TA) and preparation of DPR",
+      "Fund release in phases for civil works, machinery installation, and market linkages"
+    ],
+    "official": "https://sfurti.msme.gov.in/",
+    "source": "Ministry of Micro, Small & Medium Enterprises (MSME) / SFURTI Portal",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 39,
+    "name": "MSME Champions Scheme – ZED Certification Component",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "Quality & Standardization • Manufacturing Units",
+    "summary": "Encourages micro and small manufacturers to adopt Zero Defect, Zero Effect practices to boost product quality and environmental standards.",
+    "eligibility": "All manufacturing micro, small, and medium enterprises holding a valid Udyam Registration.",
+    "benefits": "Subsidies on certification costs: up to 80% for Micro units, up to 60% for Small units, up to 50% for Medium units. Bonus financial support for clean energy adoption.",
+    "documents": [
+      "Udyam Registration Certificate",
+      "Factory layout and process flow chart",
+      "Pollution control board consent / self-declaration",
+      "Quality control records and safety compliance logs"
+    ],
+    "steps": [
+      "Register on the MSME ZED portal using your Udyam ID",
+      "Take the free ZED Pledge to demonstrate quality commitment",
+      "Complete internal desktop assessment and upload compliance documentation",
+      "Undergo physical or remote site audit by an accredited agency",
+      "Receive ZED Bronze, Silver, or Gold Certification along with financial reimbursement"
+    ],
+    "official": "https://zed.msme.gov.in/",
+    "source": "Ministry of Micro, Small & Medium Enterprises (MSME) / ZED Portal",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 40,
+    "name": "Credit Linked Capital Subsidy Scheme (CLCSS) – Technology Upgradation",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "Modernization • Small Scale Producers & Factories",
+    "summary": "Upfront capital subsidy for micro and small industrial units to upgrade traditional manufacturing processes with modern technology.",
+    "eligibility": "Existing MSE units upgrading plant machinery or newly established units installing state-of-the-art eligible technologies.",
+    "benefits": "15% upfront capital subsidy (on institutional credit up to ₹1 Crore) for procuring approved modern machinery and automation systems.",
+    "documents": [
+      "Udyam Registration Certificate",
+      "Equipment supplier proforma invoice and technical specs",
+      "Term loan sanction letter from commercial bank",
+      "Audited financial statements of preceding three years"
+    ],
+    "steps": [
+      "Identify approved plant machinery required for manufacturing modernization",
+      "Apply for a machinery term loan through an empanelled primary lending institution",
+      "Bank uploads the subsidy application to the online CLCSS portal",
+      "Verification by nodal agencies (SIDBI/NABARD)",
+      "Direct subsidy release credited into borrower's term loan reserve account"
+    ],
+    "official": "https://www.dcmsme.gov.in/",
+    "source": "Development Commissioner for Micro, Small & Medium Enterprises (DC MSME)",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 41,
+    "name": "GeM – Government e-Marketplace Direct Vendor Onboarding",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "B2G Commerce • Local Suppliers & Direct Vendors",
+    "summary": "End-to-end national procurement portal connecting micro-vendors, retailers, and suppliers directly with central and state government procurement officers.",
+    "eligibility": "Registered proprietorships, partnerships, retailers, or manufacturing entities holding a PAN and active bank account.",
+    "benefits": "Direct access to over ₹2+ Lakh Crore of public procurement without middlemen. Mandatory 25% quota reservations. Zero tender-fee exemptions for MSMEs.",
+    "documents": [
+      "PAN Card of Business / Proprietor",
+      "Udyam Registration / MSME proof",
+      "GSTIN (where legally applicable)",
+      "Active bank account and cancelled cheque"
+    ],
+    "steps": [
+      "Visit the GeM official portal and initiate Seller Registration",
+      "Authenticate the key person via Aadhaar and PAN verification",
+      "Complete business profile, store address, and bank linkage",
+      "Upload your product catalog or service offerings with pricing",
+      "Participate in direct purchases, L1 bids, and national government e-tenders"
+    ],
+    "official": "https://gem.gov.in/",
+    "source": "Government e-Marketplace (GeM) / Ministry of Commerce and Industry",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 42,
+    "name": "National SC/ST Hub (NSSH) Scheme",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "Inclusive Procurement • SC/ST Business Owners",
+    "summary": "Specialized capability building and vendor development initiative to help SC/ST entrepreneurs fulfill public procurement mandates.",
+    "eligibility": "Micro and Small enterprises owned by Scheduled Caste or Scheduled Tribe promoters (at least 51% stake).",
+    "benefits": "Subsidized participation in domestic and international expos. 100% subsidy for single-point vendor registration with NSIC. Specialized vendor development clinics.",
+    "documents": [
+      "Caste Certificate of the primary promoter",
+      "Udyam Registration Certificate",
+      "Company PAN and GST registration",
+      "Bank statement of the enterprise"
+    ],
+    "steps": [
+      "Register on the official National SC-ST Hub portal",
+      "Link your Udyam Certificate showing SC/ST ownership classification",
+      "Attend vendor development training sessions organized by Central Public Sector Enterprises (CPSEs)",
+      "Apply for reimbursement of testing, quality certification, and stall fees"
+    ],
+    "official": "https://www.scsthub.in/",
+    "source": "National Small Industries Corporation (NSIC) / National SC/ST Hub",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 43,
+    "name": "SIDBI SMILE – Make in India Soft Loan Fund for MSMEs",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "Growth & Expansion • Established Micro & Small Units",
+    "summary": "Quasi-equity soft loans and term loan assistance to help small enterprises meet debt-equity ratios for technology and capacity expansion.",
+    "eligibility": "Micro and small businesses operating in designated Make in India manufacturing and services sectors for at least 3 years.",
+    "benefits": "Soft loans in the form of quasi-equity to cover promoter contribution gaps. Term loans with lower interest rates. Moratoriums up to 36 months.",
+    "documents": [
+      "Company Profile and Udyam Registration",
+      "Audited financial statements for the past 3 fiscal years",
+      "Detailed Project Report detailing plant expansion or machinery purchase",
+      "Bank debt-service records"
+    ],
+    "steps": [
+      "Register on the SIDBI borrower portal",
+      "Submit your project requirements under the SMILE scheme category",
+      "Upload past financial track record and projected cash flows",
+      "Attend techno-economic viability evaluation with SIDBI credit officers",
+      "Direct loan sanction and disbursement aligned with project milestones"
+    ],
+    "official": "https://www.sidbi.in/",
+    "source": "Small Industries Development Bank of India (SIDBI)",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 44,
+    "name": "Micro & Small Enterprises Cluster Development Programme (MSE-CDP)",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "Infrastructure Support • Industrial Associations & Clusters",
+    "summary": "Grant-in-aid for creating Common Facility Centres (CFCs) and developing modern infrastructure in new and existing industrial estates.",
+    "eligibility": "Groups of micro and small enterprises, industrial associations, or SPVs operating within a concentrated geographic cluster.",
+    "benefits": "Up to 70% to 80% central grant assistance (up to ₹30 Crore) for testing centers, common training facilities, effluent plants, and road/power networks.",
+    "documents": [
+      "Special Purpose Vehicle (SPV) formation documents",
+      "Detailed Project Report (DPR) of the Common Facility Centre",
+      "Cluster Diagnostic Study Report",
+      "Land encumbrance-free ownership certificate"
+    ],
+    "steps": [
+      "Form an SPV consisting of local cluster business units",
+      "Prepare DPR for the required common facility (testing lab, cold storage, machining shop)",
+      "Submit application online through the MSE-CDP portal",
+      "State Level Steering Committee (SLSC) appraisal and MoMSME clearance",
+      "Staged release of central grant for infrastructure development"
+    ],
+    "official": "https://cluster.dcmsme.gov.in/",
+    "source": "Development Commissioner for Micro, Small & Medium Enterprises (DC MSME) / MSE-CDP Portal",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 45,
+    "name": "MSME Samadhaan – Delayed Payment Monitoring System",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "Legal & Payment Protection • Suppliers & Vendors",
+    "summary": "Statutory dispute resolution mechanism empowering micro and small enterprises to recover delayed payments from corporate and government buyers.",
+    "eligibility": "Micro and small businesses registered under Udyam that supplied goods or services with unpaid invoices exceeding 45 days.",
+    "benefits": "Mandatory compounding interest payable by defaulters at three times the RBI bank rate on overdue amounts, enforced by the statutory Facilitation Council (MSEFC).",
+    "documents": [
+      "Udyam Registration Certificate",
+      "Purchase Order (PO) issued by the buyer",
+      "Delivery challan / proof of service delivery",
+      "Copy of unpaid invoices with payment reminder communication"
+    ],
+    "steps": [
+      "Log in to the MSME Samadhaan portal using Udyam credentials",
+      "File a delayed payment case against the buyer",
+      "Upload supporting invoices and delivery receipts",
+      "Micro & Small Enterprise Facilitation Council (MSEFC) issues statutory notices",
+      "Mutually conciliated settlement or binding arbitration decree issued to recover dues"
+    ],
+    "official": "https://samadhaan.msme.gov.in/",
+    "source": "Ministry of Micro, Small & Medium Enterprises (MSME) / Samadhaan Portal",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 46,
+    "name": "ASPIRE – Scheme for Promotion of Innovation, Rural Industry & Entrepreneurship",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "Rural Livelihood • Agro-Business & Village Enterprises",
+    "summary": "Sets up Livelihood Business Incubators (LBIs) and Technology Business Incubators (TBIs) across rural districts to train young village entrepreneurs.",
+    "eligibility": "Any youth, aspiring vendor, or micro-entrepreneur seeking practical operational training to start small agricultural or processing ventures.",
+    "benefits": "Practical hands-on training with modern machinery. Incubation space. Enterprise guidance. Direct links to financial schemes like PMEGP and MUDRA.",
+    "documents": [
+      "Aadhaar Card",
+      "Basic educational qualification / school certificate",
+      "Application to local district Livelihood Business Incubator",
+      "Passport-size photograph"
+    ],
+    "steps": [
+      "Locate the nearest ASPIRE Livelihood Business Incubator in your district",
+      "Select your agro-processing or light manufacturing training trade",
+      "Complete training on commercial-grade machinery",
+      "Receive mentor support to draft a business project report",
+      "Apply for enterprise seed credit to establish your commercial unit"
+    ],
+    "official": "https://aspire.msme.gov.in/",
+    "source": "Ministry of Micro, Small & Medium Enterprises (MSME) / ASPIRE Portal",
+    "verified": "2026-11-01"
+  },
+  {
+    "id": 47,
+    "name": "TReDS – Trade Receivables Discounting System",
+    "category": "Business & Livelihood",
+    "audience": "Business / Vendor",
+    "tags": "Working Capital • Suppliers & Manufacturers",
+    "summary": "An institutional electronic auction platform where micro and small enterprise suppliers discount unpaid trade invoices through competitive bank bidding.",
+    "eligibility": "Micro, Small, and Medium Enterprises supplying goods or services to large corporates, CPSEs, or government departments.",
+    "benefits": "Immediate liquidity within 48 to 72 hours without waiting for standard 90-day buyer credit terms. No personal collateral required.",
+    "documents": [
+      "Udyam Registration Certificate",
+      "Accepted / verified electronic tax invoice",
+      "Delivery challan signed by the buyer",
+      "Bank account and GST registration details"
+    ],
+    "steps": [
+      "Register as a seller on any RBI-approved TReDS platform (RXIL, M1xchange, or Invoicemart)",
+      "Upload valid buyer-accepted tax invoices on the platform",
+      "Buyer digitally validates and approves the invoice on the portal",
+      "Financiers (banks/factors) bid competitive discount rates on the accepted invoice",
+      "Accept the best bid and receive the net funds directly in your bank account"
+    ],
+    "official": "https://www.rxil.in/",
+    "source": "Reserve Bank of India (RBI) / RXIL TReDS Platform",
+    "verified": "2026-11-01"
   }
 ]

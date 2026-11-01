@@ -2246,7 +2246,7 @@ function renderWizard() {
                 </button>
 
                 <button
-                    onclick="selectWizard('Street Vendors')"
+                    onclick="selectWizard('Business / Vendor')"
                 >
                     🏪 Business / Vendor
                 </button>
@@ -2276,6 +2276,7 @@ function selectWizard(audience) {
         "Youth":            "youth",
         "Eligible Families":"family",
         "Street Vendors":   "vendor",
+        "Business / Vendor":"business",
         "Citizens":         "citizen"
     };
 
