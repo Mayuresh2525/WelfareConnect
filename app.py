@@ -622,22 +622,57 @@ def _detect_category(tokens):
     return None
 
 
-def _build_response(message):
+def _build_response(message, context=None):
     """
     Returns a dict:
       type: "scheme_detail" | "scheme_list" | "not_found" | "greeting" | "general"
       text: str
       schemes: list of scheme dicts (slim, safe for JSON)
       intent: str
+      context: dict with last_scheme_id (for the frontend to preserve and send back)
+
+    context (optional dict):
+      last_scheme_id: int — ID of the last scheme the user was discussing
     """
+    import re as _re
+
     raw = message.strip()
     q_lower = raw.lower()
     tokens = [t.strip("?!.,;:'\"()") for t in q_lower.split() if len(t.strip("?!.,;:'\"()")) > 1]
     token_set = set(tokens)
 
+    # Resolve conversation context — last scheme the user discussed
+    _ctx_scheme = None
+    if context and isinstance(context, dict):
+        _last_id = context.get("last_scheme_id")
+        if _last_id:
+            try:
+                _last_id = int(_last_id)
+                _ctx_scheme = next((s for s in SCHEMES if s["id"] == _last_id), None)
+            except (TypeError, ValueError):
+                pass
+
     # Helper: text-only response with no scheme cards
     def _plain(text, intent="general"):
-        return {"type": "general", "text": text, "schemes": [], "intent": intent}
+        out_ctx = {}
+        if _ctx_scheme:
+            out_ctx["last_scheme_id"] = _ctx_scheme["id"]
+        return {"type": "general", "text": text, "schemes": [], "intent": intent, "context": out_ctx}
+
+    def _scheme_response(s, intent, intro_text):
+        """Return a single-scheme detail response and persist its ID in context."""
+        return {
+            "type":    "scheme_detail",
+            "text":    intro_text,
+            "schemes": [s],
+            "intent":  intent,
+            "context": {"last_scheme_id": s["id"]}
+        }
+
+    def _list_response(schemes_list, intent, text):
+        """Return a scheme list response; persist first scheme's ID in context."""
+        ctx = {"last_scheme_id": schemes_list[0]["id"]} if schemes_list else {}
+        return {"type": "scheme_list", "text": text, "schemes": schemes_list, "intent": intent, "context": ctx}
 
     # Derive unique categories from the loaded data (used in several handlers)
     _all_categories = sorted({s["category"] for s in SCHEMES})
@@ -825,7 +860,124 @@ def _build_response(message):
         )
 
     # ------------------------------------------------------------------
-    # 7. General documents question (not scheme-specific)
+    # 7. Scheme-specific questions — documents, apply, benefits,
+    #    eligibility for a NAMED scheme.
+    #    These run BEFORE the generic doc/apply handlers (8 & 9) so that
+    #    "What documents do I need for MUDRA?" goes to MUDRA's checklist,
+    #    not the generic list.
+    # ------------------------------------------------------------------
+
+    # Build a fast lookup: cleaned name token → scheme
+    # Also handle hyphenated abbreviations like "pm-kisan" → "pmkisan" and "kisan"
+    def _find_named_scheme(q_str):
+        """
+        Return the best-matching scheme when the query contains a specific
+        scheme name or widely-known abbreviation.  Strips common intent words
+        before scoring so "What documents do I need for MUDRA?" scores MUDRA
+        on its name, not on the word "documents" matching other schemes.
+        Returns None if no clear single match is found above a threshold.
+        """
+        # Strip intent/question words — search on the remaining name tokens
+        _strip_words = {
+            "what", "which", "who", "how", "when", "where", "why",
+            "does", "do", "did", "can", "could", "should", "would", "is",
+            "are", "was", "were", "the", "for", "and", "of", "in", "to",
+            "that", "this", "those", "these", "tell", "me", "about", "show",
+            "find", "give", "get", "explain", "describe",
+            "document", "documents", "docs", "papers", "paperwork",
+            "certificate", "certificates", "proof", "needed", "required",
+            "need", "bring", "checklist",
+            "apply", "application", "register", "enroll", "steps",
+            "process", "procedure", "step",
+            "benefit", "benefits", "amount", "loan", "subsidy",
+            "grant", "scholarship", "stipend", "money", "receive",
+            "eligible", "eligibility", "qualify", "criteria",
+            "requirement", "requirements", "age", "income", "limit",
+        }
+        import re as _re2
+        _clean = _re2.sub(r"[^a-z0-9 ]", " ", q_str.lower())
+        _name_tokens = [t for t in _clean.split() if len(t) > 2 and t not in _strip_words]
+        if not _name_tokens:
+            return None
+        _name_query = " ".join(_name_tokens)
+
+        results = _scheme_search(_name_query, max_results=3)
+        results = [(sc, s) for sc, s in results if sc >= 15]
+        if not results:
+            return None
+        top_score, top = results[0]
+        second = results[1][0] if len(results) > 1 else 0
+        # Require a meaningful score advantage
+        if top_score >= 30 or (top_score >= 15 and second == 0) or top_score >= second * 1.8:
+            return top
+        return None
+
+    # Detect scheme-specific intent words in this query
+    _specific_doc_words  = {"document", "documents", "docs", "papers",
+                            "paperwork", "certificate", "certificates", "proof",
+                            "needed", "required", "need", "bring", "checklist"}
+    _specific_apply_words = {"apply", "application", "register", "enroll",
+                             "steps", "process", "procedure", "how"}
+    _specific_benefit_words = {"benefit", "benefits", "amount", "loan",
+                               "subsidy", "grant", "scholarship", "stipend",
+                               "money", "receive", "get", "pension"}
+    _specific_elig_words = {"eligible", "eligibility", "qualify", "criteria",
+                            "who", "can", "requirement", "requirements",
+                            "age", "income", "limit"}
+
+    # Check whether a scheme name appears in this query. We use the
+    # same cleaned-token approach as the intent gate later.
+    _q_clean_early = _re.sub(r"[^a-z0-9 ]", " ",
+                             _re.sub(r"-", " ", q_lower))
+    _q_tokens_early = set(t for t in _q_clean_early.split() if len(t) > 2)
+
+    # Try context first: if user asks a follow-up about an active scheme
+    _follow_up_words = (
+        _specific_doc_words | _specific_apply_words |
+        _specific_benefit_words | _specific_elig_words
+    )
+    if _ctx_scheme and (token_set & _follow_up_words) and len(tokens) <= 8:
+        # "What documents do I need?" after discussing PM SVANidhi
+        s = _ctx_scheme
+        if token_set & _specific_doc_words:
+            return _scheme_response(s, "documents",
+                f"Here are the **documents required** for **{s['name']}** from our database:")
+        if token_set & _specific_apply_words:
+            return _scheme_response(s, "apply",
+                f"Here's **how to apply** for **{s['name']}** from our database:")
+        if token_set & _specific_benefit_words:
+            return _scheme_response(s, "benefits",
+                f"Here are the **benefits** of **{s['name']}** from our database:")
+        if token_set & _specific_elig_words:
+            return _scheme_response(s, "eligibility",
+                f"Here are the **eligibility criteria** for **{s['name']}** from our database:")
+
+    # Try a direct named-scheme lookup combined with specific intent
+    _has_specific_intent = bool(
+        token_set & (
+            _specific_doc_words | _specific_apply_words |
+            _specific_benefit_words | _specific_elig_words
+        )
+    )
+    if _has_specific_intent:
+        _named = _find_named_scheme(raw)
+        if _named:
+            s = _named
+            if token_set & _specific_doc_words:
+                return _scheme_response(s, "documents",
+                    f"Here are the **documents required** for **{s['name']}** from our database:")
+            if token_set & _specific_apply_words:
+                return _scheme_response(s, "apply",
+                    f"Here's **how to apply** for **{s['name']}** from our database:")
+            if token_set & _specific_benefit_words:
+                return _scheme_response(s, "benefits",
+                    f"Here are the **benefits** of **{s['name']}** from our database:")
+            if token_set & _specific_elig_words:
+                return _scheme_response(s, "eligibility",
+                    f"Here are the **eligibility criteria** for **{s['name']}** from our database:")
+
+    # ------------------------------------------------------------------
+    # 8. General documents question (not scheme-specific)
     # ------------------------------------------------------------------
     doc_general_words = {"documents", "document", "docs", "papers",
                          "paperwork", "certificates", "certificate", "proof"}
@@ -973,14 +1125,23 @@ def _build_response(message):
     }
     # Only fire if none of the tokens are scheme-name words (safety valve
     # so a message like "Tell me about the Pradhan Mantri science scheme"
-    # can still proceed to scheme search)
+    # can still proceed to scheme search).
+    # Exception: "capital" is a scheme keyword (in CLCSS) but also a very
+    # common general-knowledge word — always treat it as off-topic here.
+    _force_off_topic = {"capital", "president", "prime", "minister"}
     _scheme_name_words = set()
     for _s in SCHEMES:
         _scheme_name_words.update(
             t for t in _s["name"].lower().replace("-", " ").split()
             if len(t) > 3
         )
-    if (token_set & _off_topic_words) and not (token_set & _scheme_name_words):
+    # A token forces off-topic if it's in the off-topic set AND either
+    # it's in _force_off_topic OR it's not a scheme name word.
+    _blocking_tokens = set()
+    for _ot in (token_set & _off_topic_words):
+        if _ot in _force_off_topic or _ot not in _scheme_name_words:
+            _blocking_tokens.add(_ot)
+    if _blocking_tokens:
         return _plain(
             "I'm the WelfareConnect Assistant — I'm focused on government welfare schemes "
             "and how to use the WelfareConnect website.\n\n"
@@ -1036,8 +1197,8 @@ def _build_response(message):
     # Words that signal the user wants to FIND / EXPLORE schemes
     _find_intent_words = {
         "show", "list", "give", "suggest", "recommend", "find", "search",
-        "explore", "browse", "available", "which", "schemes", "scheme",
-        "options", "opportunities", "benefits", "programs", "programmes",
+        "explore", "browse", "available",
+        "options", "opportunities", "programs", "programmes",
     }
     # Words that signal the user wants INFO about a SPECIFIC scheme
     _info_intent_words = {
@@ -1079,17 +1240,27 @@ def _build_response(message):
     has_find_intent  = bool(token_set & _find_intent_words)
     has_info_intent  = bool(token_set & _info_intent_words)
     has_audience     = bool(token_set & _audience_words)
-    # Also clean query tokens the same way for scheme-name matching
-    _clean_query_tokens = set(
-        _re.sub(r"[^a-z0-9]", "", t) for t in tokens
-    ) - {""}
+    # Clean query tokens for scheme-name matching.
+    # Also split on hyphens so "pm-kisan" → {"pm","kisan"} and "kisan" matches.
+    _clean_query_tokens = set()
+    for _t in tokens:
+        # Remove all non-alphanumeric (whole token)
+        _whole = _re.sub(r"[^a-z0-9]", "", _t)
+        if _whole:
+            _clean_query_tokens.add(_whole)
+        # Also split on hyphens within the original token
+        for _part in _t.split("-"):
+            _p = _re.sub(r"[^a-z0-9]", "", _part)
+            if len(_p) > 2:
+                _clean_query_tokens.add(_p)
+    _clean_query_tokens -= {""}
     has_scheme_name  = bool(_clean_query_tokens & _scheme_kw_set)
 
     # Decide whether to proceed to scheme search at all.
     # We proceed if:
-    # (a) user clearly wants to find/explore schemes, OR
-    # (b) user asks about a specific scheme name (info intent + name hit), OR
-    # (c) user wants to find schemes for a particular audience
+    # (a) user clearly wants to find/explore schemes (action verb), OR
+    # (b) user mentions a known scheme name (scheme name token in query), OR
+    # (c) user wants to find schemes for a particular audience (profile handlers handle this earlier)
     # Pure informational questions with NO scheme name don't proceed —
     # the min-score threshold is the secondary safety net.
     _proceed_to_search = (
@@ -1097,6 +1268,33 @@ def _build_response(message):
         has_scheme_name or
         (has_find_intent and has_audience)
     )
+
+    # Special case: user said "scheme" / "schemes" with an unknown name
+    # (e.g. "What is the Ayushman Bharat scheme?") → honest not-found rather
+    # than generic out-of-scope message.
+    # Only fire this when the query has an info-style phrasing, NOT a plain
+    # discovery/browsing phrase like "schemes for farmers" or "which schemes".
+    _info_phrasing = {"what", "tell", "about", "explain", "describe", "show", "explain"}
+    _mentions_scheme_word = bool(token_set & {"scheme", "schemes", "yojana"})
+    _has_info_phrasing = bool(token_set & _info_phrasing)
+    if (not _proceed_to_search and _mentions_scheme_word
+            and not has_scheme_name and _has_info_phrasing
+            and not (token_set & _audience_words)):
+        return {
+            "type":    "not_found",
+            "text":    (
+                "I wasn't able to find that specific scheme in the WelfareConnect database.\n\n"
+                "WelfareConnect currently covers **" + str(len(SCHEMES)) + " schemes** across "
+                "education, skills & employment, business & livelihood, "
+                "pension & social security, agriculture, financial inclusion, and digital services.\n\n"
+                "You can:\n"
+                "• Browse all available schemes using the **Find Schemes** section\n"
+                "• Visit **myscheme.gov.in** for a comprehensive government scheme search"
+            ),
+            "schemes": [],
+            "intent":  "not_found",
+            "context": {}
+        }
 
     # ------------------------------------------------------------------
     # 13. Profile-based guidance — only fires when intent is to FIND
@@ -1121,17 +1319,14 @@ def _build_response(message):
     )
     if is_student_profile:
         edu_schemes = [s for s in SCHEMES if s["category"] == "Education"][:4]
-        return {
-            "type":    "scheme_list",
-            "text": (
-                "For students, WelfareConnect covers several **Education** category schemes "
-                "including scholarships, free online courses, and skill training opportunities. "
-                "Here are some to explore — check each scheme's official eligibility criteria "
-                "to see which ones apply to your situation:"
-            ),
-            "schemes": edu_schemes,
-            "intent":  "general"
-        }
+        return _list_response(
+            edu_schemes,
+            "general",
+            "For students, WelfareConnect covers several **Education** category schemes "
+            "including scholarships, free online courses, and skill training opportunities. "
+            "Here are some to explore — check each scheme's official eligibility criteria "
+            "to see which ones apply to your situation:"
+        )
 
     # business / entrepreneur
     biz_profile = {
@@ -1144,16 +1339,13 @@ def _build_response(message):
     )
     if is_biz_profile:
         biz_schemes = [s for s in SCHEMES if s["category"] == "Business & Livelihood"][:4]
-        return {
-            "type":    "scheme_list",
-            "text": (
-                "For business and livelihood, WelfareConnect covers schemes that support "
-                "entrepreneurs, micro-enterprises, street vendors, food processors, and artisans. "
-                "Here are some relevant schemes — verify eligibility on the official portals before applying:"
-            ),
-            "schemes": biz_schemes,
-            "intent":  "general"
-        }
+        return _list_response(
+            biz_schemes,
+            "general",
+            "For business and livelihood, WelfareConnect covers schemes that support "
+            "entrepreneurs, micro-enterprises, street vendors, food processors, and artisans. "
+            "Here are some relevant schemes — verify eligibility on the official portals before applying:"
+        )
 
     # employment / skills
     empl_profile = {
@@ -1166,16 +1358,35 @@ def _build_response(message):
     if is_empl_profile:
         empl_schemes = [s for s in SCHEMES
                         if s["category"] in ("Skills & Employment", "Employment & Livelihood")][:4]
-        return {
-            "type":    "scheme_list",
-            "text": (
-                "For employment and skills, WelfareConnect has schemes covering skill training, "
-                "apprenticeships, job portals, and rural employment programmes. "
-                "Here are some to explore — check the official eligibility criteria for each:"
-            ),
-            "schemes": empl_schemes,
-            "intent":  "general"
-        }
+        return _list_response(
+            empl_schemes,
+            "general",
+            "For employment and skills, WelfareConnect has schemes covering skill training, "
+            "apprenticeships, job portals, and rural employment programmes. "
+            "Here are some to explore — check the official eligibility criteria for each:"
+        )
+
+    # farmers / agriculture
+    farm_profile = {
+        "farmer", "farmers", "farming", "agriculture", "agricultural",
+        "kisan", "crop", "crops",
+    }
+    is_farm_profile = (
+        farm_profile & token_set and
+        _profile_find_verbs & token_set
+    )
+    if is_farm_profile:
+        farm_schemes = [s for s in SCHEMES if s["category"] == "Agriculture"][:4]
+        if not farm_schemes:
+            farm_schemes = [s for s in SCHEMES if "farmer" in s.get("audience", "").lower()
+                            or "kisan" in s["name"].lower()][:4]
+        return _list_response(
+            farm_schemes,
+            "general",
+            "For farmers and agriculture, WelfareConnect has schemes covering income support, "
+            "market access, and rural livelihoods. "
+            "Here are some to explore — verify eligibility on the official portals:"
+        )
 
     # ------------------------------------------------------------------
     # 14. "I am a [profile]" — acknowledge and offer help without
@@ -1280,12 +1491,7 @@ def _build_response(message):
                 "documents":   f"Here are the **documents required** for **{s['name']}** from our database:",
                 "apply":       f"Here's **how to apply** for **{s['name']}** from our database:",
             }[intent]
-            return {
-                "type":    "scheme_detail",
-                "text":    intro,
-                "schemes": [s],
-                "intent":  intent
-            }
+            return _scheme_response(s, intent, intro)
 
     # ------------------------------------------------------------------
     # Category-based list (when a category keyword was detected but
@@ -1294,15 +1500,12 @@ def _build_response(message):
     if cat and not matches:
         cat_schemes = [s for s in SCHEMES if s["category"] == cat][:5]
         if cat_schemes:
-            return {
-                "type":    "scheme_list",
-                "text":    (
-                    f"Here are schemes in the **{cat}** category from the WelfareConnect database. "
-                    "Please verify your eligibility on the official portal before applying."
-                ),
-                "schemes": cat_schemes,
-                "intent":  "general"
-            }
+            return _list_response(
+                cat_schemes,
+                "general",
+                f"Here are schemes in the **{cat}** category from the WelfareConnect database. "
+                "Please verify your eligibility on the official portal before applying."
+            )
 
     # ------------------------------------------------------------------
     # Keyword search returned results above the score threshold
@@ -1310,27 +1513,48 @@ def _build_response(message):
     if matches:
         if len(matches) == 1:
             s = matches[0]
-            return {
-                "type":    "scheme_detail",
-                "text":    f"The closest match in our database is **{s['name']}**:",
-                "schemes": [s],
-                "intent":  intent
-            }
+            return _scheme_response(s, intent, f"The closest match in our database is **{s['name']}**:")
         cat_hint = f" in the **{cat}** category" if cat else ""
-        return {
-            "type":    "scheme_list",
-            "text":    (
-                f"I found {len(matches)} scheme(s){cat_hint} that match your question. "
-                "These are from the WelfareConnect database — please verify eligibility "
-                "on the official portal before applying."
-            ),
-            "schemes": matches,
-            "intent":  intent
-        }
+        return _list_response(
+            matches,
+            intent,
+            f"I found {len(matches)} scheme(s){cat_hint} that match your question. "
+            "These are from the WelfareConnect database — please verify eligibility "
+            "on the official portal before applying."
+        )
 
     # ------------------------------------------------------------------
     # No results above the score threshold
     # ------------------------------------------------------------------
+    # Check if the user named a scheme whose tokens aren't in any match.
+    # If so, give an honest "not in our database" response.
+    def _honest_not_found():
+        return {
+            "type":    "not_found",
+            "text":    (
+                "I wasn't able to find that specific scheme in the WelfareConnect database.\n\n"
+                "This scheme may not be in our current database, or it may be listed under "
+                "a different name. You can:\n"
+                "• Browse all available schemes using the **Find Schemes** section\n"
+                "• Try the scheme's full official name\n"
+                "• Visit **myscheme.gov.in** for a comprehensive government scheme search"
+            ),
+            "schemes": [],
+            "intent":  "not_found",
+            "context": {}
+        }
+
+    if has_scheme_name:
+        if not matches:
+            return _honest_not_found()
+        # Check if the returned schemes actually contain the query's scheme
+        # name tokens — if none do, the results are spurious substitutions.
+        _query_name_tokens = _clean_query_tokens & _scheme_kw_set
+        _top_name_clean = _re.sub(r"[^a-z0-9 ]", " ", matches[0]["name"].lower())
+        _any_token_in_top = any(t in _top_name_clean for t in _query_name_tokens)
+        if not _any_token_in_top:
+            return _honest_not_found()
+
     return {
         "type":    "not_found",
         "text":    (
@@ -1343,7 +1567,8 @@ def _build_response(message):
             "• Visiting **myscheme.gov.in** for a broader government scheme search"
         ),
         "schemes": [],
-        "intent":  "not_found"
+        "intent":  "not_found",
+        "context": {}
     }
 
 
@@ -1351,16 +1576,18 @@ def _build_response(message):
 def chat():
     data    = request.get_json(silent=True) or {}
     message = str(data.get("message", "")).strip()[:300]
+    context = data.get("context")  # optional dict from frontend, e.g. {"last_scheme_id": 6}
 
     if not message:
         return jsonify({
             "type":    "not_found",
             "text":    "Please type a question to get started.",
             "schemes": [],
-            "intent":  "empty"
+            "intent":  "empty",
+            "context": {}
         })
 
-    result = _build_response(message)
+    result = _build_response(message, context=context)
 
     # Slim down schemes for the response — keep only fields the UI needs
     slim_fields = ("id", "name", "category", "audience", "summary",
@@ -1369,6 +1596,10 @@ def chat():
         {k: s[k] for k in slim_fields if k in s}
         for s in result["schemes"]
     ]
+
+    # Ensure context is always present in the response
+    if "context" not in result:
+        result["context"] = {}
 
     return jsonify(result)
 

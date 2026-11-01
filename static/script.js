@@ -2557,6 +2557,9 @@ initializeRevealAnimation();
     let chatOpen = false;
     let chatBusy = false;
     let chatGreeted = false;
+    // Conversation context: stores the last scheme context returned by
+    // the backend so follow-up questions can resolve "Which documents?"
+    let _chatContext = {};
 
     // ----------------------------------------------------------
     // TOGGLE PANEL
@@ -2620,12 +2623,17 @@ initializeRevealAnimation();
         fetch("/api/chat", {
             method:  "POST",
             headers: { "Content-Type": "application/json" },
-            body:    JSON.stringify({ message: text })
+            body:    JSON.stringify({ message: text, context: _chatContext })
         })
         .then(function (r) { return r.json(); })
         .then(function (data) {
             _removeTyping();
             chatBusy = false;
+            // Update stored context from the response so follow-up
+            // questions can reference the last discussed scheme.
+            if (data.context && typeof data.context === "object") {
+                _chatContext = data.context;
+            }
             _renderBotResponse(data);
         })
         .catch(function () {
