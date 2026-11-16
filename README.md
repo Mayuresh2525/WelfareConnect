@@ -48,8 +48,8 @@ WelfareConnect/
 Clone the repository:
 
 ```bash
-git clone https://github.com/<your-username>/<your-repository>.git
-cd <your-repository>
+git clone https://github.com/Mayuresh2525/WelfareConnect.git
+cd WelfareConnect
 ```
 
 Install the required dependencies:
@@ -84,4 +84,4 @@ This project was developed to apply Python and Flask in building a practical web
 
 ## Note
 
-WelfareConnect is an independent educational project and is not an official government website. Users should verify scheme details and current requirements through the linked official government portals. Do not publish a database containing real participant information or expose passwords and secret credentials in the public repository.
+WelfareConnect is an independent educational project and is not an official government website. Users should verify scheme details and current requirements through the linked official government portals. 
